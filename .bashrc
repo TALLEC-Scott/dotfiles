@@ -108,7 +108,7 @@ alias gc="git commit -m"
 alias ga="git add"
 alias gits="git status"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias update='sudo apt update && sudo apt upgrade'
+alias update='sudo apt update && sudo apt full-upgrade'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
