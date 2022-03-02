@@ -109,6 +109,7 @@ alias ga="git add"
 alias gits="git status"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias update='sudo apt update && sudo apt full-upgrade'
+alias ninjac='ninja -C compile'
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -132,3 +133,10 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+export LC_CTYPE=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+
+export PGDATA="$HOME/postgres_data"
+export PGHOST="/tmp"
