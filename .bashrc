@@ -101,12 +101,15 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias gww="gcc -Wall -Wextra -std=c99 -pedantic -Werror"
+alias gpp="g++ -Wall -Wextra -Werror -pedantic -std=c++20"
 alias epiclang="find . -iname '*.h' -o -iname '*.c' | xargs clang-format -i"
 alias gpf="git push --follow-tags"
 alias gp="git push"
 alias gc="git commit -m"
 alias ga="git add"
 alias gits="git status"
+alias cmb="cmake -S . -B build/"
+alias cmr="cmake --build build/"
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -131,3 +134,5 @@ if ! shopt -oq posix; then
   fi
 fi
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+export PGDATA="$HOME/postgres_data"
+export PGHOST="/tmp"
