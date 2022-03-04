@@ -101,12 +101,15 @@ alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
 alias gww="gcc -Wall -Wextra -std=c99 -pedantic -Werror"
+alias gpp="g++ -Wall -Wextra -Werror -pedantic -std=c++20"
 alias epiclang="find . -iname '*.h' -o -iname '*.c' | xargs clang-format -i"
 alias gpf="git push --follow-tags"
 alias gp="git push"
 alias gc="git commit -m"
 alias ga="git add"
 alias gits="git status"
+alias cmb="cmake -S . -B build/"
+alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias update='sudo apt update && sudo apt full-upgrade'
 alias ninjac='ninja -C compile'
@@ -136,7 +139,6 @@ fi
 
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
-
 
 export PGDATA="$HOME/postgres_data"
 export PGHOST="/tmp"
