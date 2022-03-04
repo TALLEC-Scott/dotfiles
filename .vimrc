@@ -3,12 +3,31 @@ call plug#begin('~/.confs/vim/bundle/plugged')
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'vim-airline/vim-airline'
 Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
+Plug 'scrooloose/syntastic'
+Plug 'frazrepo/vim-rainbow'
+"Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
 
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 endif
+
+" Syntastic recommended settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+let g:syntastic_check_on_w = 1
+
+"vim-rainbow settings
+let g:rainbow_active = 1
+
 
 " With a map leader it's possible to do extra key combinations
 " like <leader>w saves the current file
