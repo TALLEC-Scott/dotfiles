@@ -3,8 +3,9 @@ call plug#begin('~/.confs/vim/bundle/plugged')
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'vim-airline/vim-airline'
 Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
-Plug 'scrooloose/syntastic'
+"Plug 'scrooloose/syntastic'
 Plug 'frazrepo/vim-rainbow'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
@@ -12,8 +13,8 @@ call plug#end()
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 endif
-
 " Syntastic recommended settings
+"
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -24,6 +25,17 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 
 let g:syntastic_check_on_w = 1
+"coc,nvim setup
+"
+set hidden
+
+set nobackup
+set nowritebackup
+
+"bBetter display for messgages
+"
+set cmdheight=2
+
 
 "vim-rainbow settings
 let g:rainbow_active = 1
@@ -79,7 +91,7 @@ set autowriteall " write the contents of the file if it has been modified
 set autoread
 " set to auto read when a file is changed from the outside
 "
-set so=1
+set so=4
 "scroll offset, pads files with virtual lines on top and on the bottom
 set sidescrolloff=5
 set ruler

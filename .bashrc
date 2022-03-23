@@ -102,7 +102,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gww="gcc -Wall -Wextra -std=c99 -pedantic -Werror"
 alias gpp="g++ -Wall -Wextra -Werror -pedantic -std=c++20"
-alias epiclang="find . -iname '*.h' -o -iname '*.c' | xargs clang-format -i"
+alias epiclang="find . -iname '*.h' -o -iname '*.c' -o -iname '*.cc' -o -iname '*.hh' | xargs clang-format -i"
 alias gpf="git push --follow-tags"
 alias gp="git push"
 alias gc="git commit -m"
@@ -113,6 +113,8 @@ alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias update='sudo apt update && sudo apt full-upgrade'
 alias ninjac='ninja -C compile'
+alias glog='git log --all --decorate --oneline --graph'
+
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
