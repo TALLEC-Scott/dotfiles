@@ -102,7 +102,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias gww="gcc -Wall -Wextra -std=c99 -pedantic -Werror"
 alias gpp="g++ -Wall -Wextra -Werror -pedantic -std=c++20"
-alias epiclang="find . -iname '*.h' -o -iname '*.c' -o -iname '*.cc' -o -iname '*.hh' | xargs clang-format -i"
+alias epiclang="find . -iname '*.h' -o -iname '*.c' -o -iname '*.cc' -o -iname '*.hh' -o -iname '*.hxx' | xargs clang-format -i"
 alias gpf="git push --follow-tags"
 alias gp="git push"
 alias gc="git commit -m"
