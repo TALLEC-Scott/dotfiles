@@ -138,6 +138,9 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+set -o vi
+
+
 
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
