@@ -138,6 +138,8 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+#enables vi style binds in bash
 set -o vi
 
 
