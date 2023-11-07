@@ -95,6 +95,21 @@ gt()
 {
     git tag -a "$1" -m "git tag for $1"
 }
+
+function ghtemplate() {
+    repo_name=$1
+    template_repo=${2:-template-1}
+    template_owner=${3:-TALLEC-Scott}
+
+    if [[ -z "$repo_name" ]]; then
+        echo "Usage: ghtemplate <repository-name> [template_repo] [template_owner]"
+    else
+        gh repo create "$repo_name" --private --clone --template="$template_owner/$template_repo"
+        cd "$repo_name" || return
+    fi
+}
+
+
 # some more ls aliases
 
 alias ll='ls -alF'
@@ -111,9 +126,13 @@ alias gits="git status"
 alias cmb="cmake -S . -B build/"
 alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias update='sudo apt update && sudo apt full-upgrade'
+alias update='sudo apt -y update && sudo apt -y full-upgrade && sudo apt -y autoremove'
 alias ninjac='ninja -C compile'
 alias glog='git log --all --decorate --oneline --graph'
+alias sshtallec='ssh scott@88.160.34.221 -p 50000'
+alias netup='sudo service network-manager restart && sudo airmon-ng stop wlp0s20f3mon'
+
+alias ghtmp='ghtemplate'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -139,8 +158,13 @@ if ! shopt -oq posix; then
   fi
 fi
 
+#enables vi style binds in bash
+set -o vi
+
 export LC_CTYPE=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 
 export PGDATA="$HOME/postgres_data"
 export PGHOST="/tmp"
+export SERVER_URL="http://127.0.0.1:8080"
+
