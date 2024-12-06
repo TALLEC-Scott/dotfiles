@@ -127,10 +127,14 @@ alias cmb="cmake -S . -B build/"
 alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias update='sudo apt -y update && sudo apt -y full-upgrade && sudo apt -y autoremove'
+alias pipupdate='pip-review --local --auto && pip cache purge'
+
+
 alias ninjac='ninja -C compile'
 alias glog='git log --all --decorate --oneline --graph'
 alias sshtallec='ssh scott@88.160.34.221 -p 50000'
 alias netup='sudo service network-manager restart && sudo airmon-ng stop wlp0s20f3mon'
+alias gcl='git clone'
 
 alias ghtmp='ghtemplate'
 
@@ -167,4 +171,5 @@ export LC_ALL=en_US.UTF-8
 export PGDATA="$HOME/postgres_data"
 export PGHOST="/tmp"
 export SERVER_URL="http://127.0.0.1:8080"
+export PATH=$PATH:/home/scott/go/bin
 
