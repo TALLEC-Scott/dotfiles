@@ -1,5 +1,15 @@
+linux ---
+
 neofetch
 wpm
 htop
 pip
 python-as-python3
+
+
+windows ---
+
+powertoys
+clipboard shortcut
+search bar
+setting mouse on window from accessibility setting
