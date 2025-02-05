@@ -73,11 +73,13 @@ This setup uses `vim-plug` as the plugin manager. If `vim-plug` is not installed
 
 ---
 
-## **Customization**
+## **TODO**
 
-Feel free to modify `.vimrc` and `.bashrc` to suit your preferences:
-- Add new plugins in the `vim-plug` section of `.vimrc`.
-- Define custom aliases and environment variables in `.bashrc`.
+- Add os conditionals depending on if on wsl or linux (maybe even diff distros)
+- update using work pc
+- add ide specific configs and plugins
+- add style format
+- add outlook and workflow scripts
 
 ---
 
