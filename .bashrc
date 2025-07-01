@@ -173,3 +173,6 @@ export PGHOST="/tmp"
 export SERVER_URL="http://127.0.0.1:8080"
 export PATH=$PATH:/home/scott/go/bin
 
+# Ricing out env with oh my posh, ( can be used in diff envs like bash and ps)
+
+eval "$(oh-my-posh init bash --config 'https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/atomic.omp.json')"
