@@ -85,6 +85,7 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 - add ide specific configs and plugins
 - add style format
 - add outlook and workflow scripts
+- add windows powertoys config
 
 ---
 
