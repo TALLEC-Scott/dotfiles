@@ -75,10 +75,9 @@ This setup uses `vim-plug` as the plugin manager. If `vim-plug` is not installed
 
 ## Installing [Oh-my-posh](https://ohmyposh.dev/docs/installation/linux)
 
-https://ohmyposh.dev/docs/installation/linux
-
-`curl -s https://ohmyposh.dev/install.sh | bash -s`
-
+```bash
+curl -s https://ohmyposh.dev/install.sh | bash -s
+```
 ## **TODO**
 
 - Add os conditionals depending on if on wsl or linux (maybe even diff distros)
