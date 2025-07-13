@@ -80,7 +80,7 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
 FONT : JetBrainsMono
-THEME : in the .bashrc (atomic)
+THEME : Atomic (in the .bashrc)
 ## **TODO**
 
 - Add os conditionals depending on if on wsl or linux (maybe even diff distros)
