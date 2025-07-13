@@ -18,6 +18,10 @@ done
 uv python install 3.12 --default --preview
 
 
+curl -s https://ohmyposh.dev/install.sh | bash -s
+# add font install aswell
+
+
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 sudo apt install build-essential cmake vim-nox python3-dev
