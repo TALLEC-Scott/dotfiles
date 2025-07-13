@@ -176,6 +176,15 @@ export PATH=$PATH:/home/scott/go/bin
 # force pip to use venv
 export PIP_REQUIRE_VIRTUALENV=true
 
+# used by my git message emote hook project (uncomment and adapt based on your env)
+# export LLM_API_URL="http://localhost:11434"
+# export LLM_MODEL="gemma3n:e4b"
+
+#API_KEYS
+# TODO: Move API keys into a secured file (e.g. .env) with strict permissions for shared machines and possibly encrypted
+export OPENAI_API_KEY=
+export ANTHROPIC_API_KEY=
+
 
 # Ricing out env with oh my posh, ( can be used in diff envs like bash and ps)
 
