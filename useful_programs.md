@@ -1,7 +1,7 @@
 # linux
 NOTE for installing python cli applications use uv tool install
-- uv
-- ruff
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- [ruff](https://docs.astral.sh/ruff/installation/)
 - neofetch
 - wpm
 - cpuls
@@ -15,7 +15,7 @@ NOTE for installing python cli applications use uv tool install
 - llm (running llms using api)
 - ollama (running llms locally)
 - ripgrep (rg is like grep, but faster and more intuitive)
-- eza https://eza.rocks/
+- [eza](https://eza.rocks/) 
 
 # windows
 
