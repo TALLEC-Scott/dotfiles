@@ -14,7 +14,8 @@ docling
 youtube-dl
 llm (running llms using api)
 ollama (running llms locally)
-ripgrep (like grep, but faster and more intuitive)
+ripgrep (rg is like grep, but faster and more intuitive)
+eza https://eza.rocks/
 
 windows ---
 
