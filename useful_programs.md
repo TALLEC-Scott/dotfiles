@@ -1,4 +1,4 @@
-linux ---
+# linux
 NOTE for installing python cli applications use uv tool install
 uv
 ruff
@@ -17,7 +17,7 @@ ollama (running llms locally)
 ripgrep (rg is like grep, but faster and more intuitive)
 eza https://eza.rocks/
 
-windows ---
+# windows
 
 powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
 clipboard shortcut (AI correct a text)
