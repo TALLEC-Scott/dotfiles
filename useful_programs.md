@@ -21,3 +21,4 @@ NOTE for installing python cli applications use uv tool install
 - powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
 - clipboard shortcut (AI correct a text)
 - Spotlight search bar like in MacOS and Linux
+/TODO Add windows backup
