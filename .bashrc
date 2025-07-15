@@ -171,7 +171,7 @@ export LC_ALL=en_US.UTF-8
 export PGDATA="$HOME/postgres_data"
 export PGHOST="/tmp"
 export SERVER_URL="http://127.0.0.1:8080"
-export PATH=$PATH:/home/scott/go/bin
+export PATH=$PATH:/home/scott/go/bin:$HOME/.local/bin
 
 # force pip to use venv
 export PIP_REQUIRE_VIRTUALENV=true
