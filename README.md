@@ -32,7 +32,7 @@ ln -sf ~/dotfiles/.bashrc ~/.bashrc
 ### **3. Reload Configurations**
 - For `.bashrc`: Reload the shell configuration:
   ```bash
-  source ~/.bashrc
+  source ~/.bashrc # or bash or exec bash
   ```
 - For `.vimrc`: Open Vim and run:
   ```vim
