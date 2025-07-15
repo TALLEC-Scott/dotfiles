@@ -79,9 +79,9 @@ This setup uses `vim-plug` as the plugin manager. If `vim-plug` is not installed
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
-FONT : JetBrainsMono
+*Font* : JetBrainsMono
 
-THEME : Atomic (in the .bashrc)
+*Theme* : Atomic (in the .bashrc)
 ## **TODO**
 
 - Add os conditionals depending on if on wsl or linux (maybe even diff distros)
