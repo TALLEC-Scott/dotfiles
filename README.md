@@ -108,7 +108,3 @@ These dotfiles are open source and available under the [MIT License](LICENSE).
 
 - [vim-plug](https://github.com/junegunn/vim-plug)
 - Inspiration from various dotfiles repositories.
-
----
-
-Enjoy your enhanced development environment! 🚀
