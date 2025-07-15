@@ -7,7 +7,6 @@ NOTE for installing python cli applications use uv tool install
 - cpuls
 - nvitop
 - htop
-- pip
 - poetry
 - black
 - docling
