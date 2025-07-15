@@ -80,6 +80,7 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
 FONT : JetBrainsMono
+
 THEME : Atomic (in the .bashrc)
 ## **TODO**
 
