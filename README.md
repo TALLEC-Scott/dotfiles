@@ -79,7 +79,7 @@ This setup uses `vim-plug` as the plugin manager. If `vim-plug` is not installed
 curl -s https://ohmyposh.dev/install.sh | bash -s
 ```
 
-*Font* : JetBrainsMono Nerd Font Mono
+*Font* : JetBrainsMono NFM (Nerd Font Mono)
 
 *Theme* : Atomic (in the .bashrc)
 ## **TODO**
