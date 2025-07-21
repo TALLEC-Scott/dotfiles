@@ -190,6 +190,5 @@ export ANTHROPIC_API_KEY=
 
 eval "$(oh-my-posh init bash --config 'https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/atomic.omp.json')"
 
-clear
-neofetch
-ls
+# commands to run when bash is loaded
+clear && neofetch && ls
