@@ -17,7 +17,7 @@ NOTE for installing python cli applications use uv tool install
 - [eza](https://eza.rocks/) 
 - lazy git
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
-- bat (better cat)
+- [bat](https://github.com/sharkdp/bat) (better cat)
 # windows
 
 - powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
