@@ -18,6 +18,7 @@ NOTE for installing python cli applications use uv tool install
 - lazy git
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
 - [bat](https://github.com/sharkdp/bat) (better cat)
+- [glab](https://docs.gitlab.com/editor_extensions/gitlab_cli/)
 # windows
 
 - powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
