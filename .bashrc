@@ -128,7 +128,7 @@ alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias update='sudo apt -y update && sudo apt -y full-upgrade && sudo apt -y autoremove'
 alias pipupdate='pip-review --local --auto && pip cache purge'
-
+alias uvupdate='uv self update'
 
 alias ninjac='ninja -C compile'
 alias glog='git log --all --decorate --oneline --graph'
