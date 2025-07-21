@@ -16,6 +16,7 @@ NOTE for installing python cli applications use uv tool install
 - ripgrep (rg is like grep, but faster and more intuitive)
 - [eza](https://eza.rocks/) 
 - lazy git
+- [spotify-player-cli](https://github.com/aome510/spotify-player)
 # windows
 
 - powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
