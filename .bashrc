@@ -196,5 +196,6 @@ export ANTHROPIC_API_KEY=
 
 eval "$(oh-my-posh init bash --config 'https://github.com/JanDeDobbeleer/oh-my-posh/blob/main/themes/atomic.omp.json')"
 
-# commands to run when bash is loaded
-clear && cd && neofetch --source /home/scott/.config/3ds_logo.txt --ascii_colors 12 && ls
+# uses os colors scheme
+clear && cd && neofetch --source /home/scott/.config/3ds_logo.txt && ls
+# --ascii_colors 12 for ds blue
