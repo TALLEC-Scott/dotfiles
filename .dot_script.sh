@@ -6,6 +6,7 @@ tools=(
   ruff@latest
   nvitop
   speedtest-cli
+  gpustat
   cowsay #integral to my setup
   
 )
