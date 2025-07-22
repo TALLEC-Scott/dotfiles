@@ -33,3 +33,6 @@ python3 install.py --all
 
 # the executable is called batcat due to a naming conflict
 ln -s /usr/bin/batcat ~/.local/bin/bat
+
+
+git config --global core.editor vim
