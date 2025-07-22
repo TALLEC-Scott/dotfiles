@@ -36,6 +36,8 @@ NOTE for installing python cli applications use uv tool install
 
 - Wallpaper Engine 
 - NordVPN
+- qBitTorrent
+- VLC
 
 `TODO` Add windows backup
 
