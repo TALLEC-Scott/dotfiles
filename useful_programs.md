@@ -59,7 +59,7 @@ NOTE for installing python cli applications use uv tool install
 
 ## Private Server
 - NAS
-- peer2peer torrent client
+- P2P torrent client
 - limited VM capabilities, limited to 1-2 cpu cores per vm and 1GB of total RAM (should probably migrate), hosts:
   - plex server (transcoding need for streaming is not supported by arm64)
   - websites (scuba diving and portfolio website (WIP))
