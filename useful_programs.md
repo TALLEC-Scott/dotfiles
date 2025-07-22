@@ -53,7 +53,7 @@ NOTE for installing python cli applications use uv tool install
 - Obsidian clips
 
 ## Productivity tools
-- Note Taking - Obsidian (synced with git), Confluence and Notepad
+- Note Taking - Obsidian (synced with git), Confluence (legacy) and Notepad
 - Editor - Vim or VsCode (want to try Cursor, neovim and zed)
 - Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin
 
