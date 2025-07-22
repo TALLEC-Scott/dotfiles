@@ -116,7 +116,8 @@ function ghtemplate() {
 
 
 # some more ls aliases
-
+alias cat='bat --paging=never'
+alias ls='eza'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
