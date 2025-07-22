@@ -1,4 +1,4 @@
-# linux
+## linux
 NOTE for installing python cli applications use uv tool install
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [ruff](https://docs.astral.sh/ruff/installation/)
@@ -20,7 +20,7 @@ NOTE for installing python cli applications use uv tool install
 - [glab](https://docs.gitlab.com/editor_extensions/gitlab_cli/)
 - tmux
 
-# windows
+## windows
 
 - powertoys | set shortcuts like CAPSLOCK to control and ALT+Q to ALT+F4, and alt+space to opening up search
   - clipboard shortcut (AI correct a text)
@@ -40,7 +40,7 @@ NOTE for installing python cli applications use uv tool install
 `TODO` Add windows backup
 
 
-# Firefox extensions
+## Firefox extensions
 - u-block origin
 - vimium
 - Leech Blocker NG
@@ -50,12 +50,12 @@ NOTE for installing python cli applications use uv tool install
 - keypass - offline password manager
 - Obsidian clips
 
-# Productivity tools
+## Productivity tools
 - Note Taking - Obsidian (synced with git), Confluence and Notepad
 - Editor - Vim or VsCode (want to try Cursor, neovim and zed)
 - Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin
 
-# Private Server
+## Private Server
 - NAS
 - peer2peer torrent client
 - limited VM capabilities, limited to 1-2 cpu cores per vm and 1GB of total RAM (should probably migrate), hosts:
