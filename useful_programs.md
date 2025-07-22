@@ -26,3 +26,12 @@ NOTE for installing python cli applications use uv tool install
 - Spotlight search bar like in MacOS and Linux
 
 `TODO` Add windows backup
+
+
+# Firefox extensions
+u-block origin
+vimium
+Leech Blocker NG
+unpaywall
+return youtube dislike
+sponsorblock
