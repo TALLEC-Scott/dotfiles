@@ -2,6 +2,7 @@
 NOTE for installing python cli applications use uv tool install
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [ruff](https://docs.astral.sh/ruff/installation/)
+- precommit
 - neofetch
 - wpm
 - lscpu
