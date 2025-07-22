@@ -16,6 +16,7 @@ NOTE for installing python cli applications use uv tool install
 - ripgrep (rg is like grep, but faster and more intuitive)
 - [eza](https://eza.rocks/) 
 - lazy git
+- [lazy docker](https://github.com/jesseduffield/lazydocker)
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
 - [bat](https://github.com/sharkdp/bat) (better cat)
 - [glab](https://docs.gitlab.com/editor_extensions/gitlab_cli/)
