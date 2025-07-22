@@ -29,9 +29,9 @@ NOTE for installing python cli applications use uv tool install
 
 
 # Firefox extensions
-u-block origin
-vimium
-Leech Blocker NG
-unpaywall
-return youtube dislike
-sponsorblock
+- u-block origin
+- vimium
+- Leech Blocker NG
+- unpaywall
+- return youtube dislike
+- sponsorblock
