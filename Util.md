@@ -2,8 +2,6 @@
 # Util
 
 ## CLI util (Debian-based Linux)
-> [!IMPORTANT]  
-> For installing python cli applications use uv tool install
 
 ### sh
 - ollama (running llms locally)
@@ -21,6 +19,9 @@
 - yt-dlp
 - docling
 - llm
+> [!IMPORTANT]  
+> For installing python cli applications use uv tool install
+
 
 ### Deb
 - lscpu
