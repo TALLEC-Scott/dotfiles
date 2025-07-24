@@ -8,7 +8,7 @@ NOTE for installing python cli applications use uv tool install
 - lscpu
 - nvitop
 - htop
-- btop (with gpu enabled)
+- [btop](https://github.com/aristocratos/btop) (with gpu enabled)
 - poetry
 - docling
 - youtube-dl
