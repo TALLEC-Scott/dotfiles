@@ -53,12 +53,13 @@
   - WorkSpaces
 - f.lux
 - cyberDuck - FTP
+- OVPN
+
 
 ### Personal
 
 - Wallpaper Engine 
 - NordVPN
-- OVPN
 - qBitTorrent
 - VLC
 
