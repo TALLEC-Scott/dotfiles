@@ -2,7 +2,6 @@
 
 
 This repository contains configuration files for a personalized development environment.
----
 
 ## **Included Files**
 
