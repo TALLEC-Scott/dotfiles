@@ -89,7 +89,7 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 - add style format
 - add outlook and workflow scripts
 - add windows powertoys config
-
+- include all util installation in a single script
 ---
 
 ## **Credits**
