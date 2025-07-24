@@ -3,9 +3,11 @@
 
 ## CLI util (Debian-based Linux)
 
+
 ### sh
 - ollama (running llms locally)
 - [uv](https://docs.astral.sh/uv/getting-started/installation/)
+- oh-my-posh
 
 ### PyPI
 - [ruff](https://docs.astral.sh/ruff/installation/)
@@ -58,6 +60,10 @@
 - f.lux
 - cyberDuck - FTP
 - OVPN
+
+### PowerShell
+- posh-git
+- oh-my-posh
 
 
 ### Personal
