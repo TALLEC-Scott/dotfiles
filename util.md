@@ -37,6 +37,7 @@
 - dust (replacement for du)
 - gh
 - btm (better htop)
+- glances (similar to htop)
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
