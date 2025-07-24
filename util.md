@@ -19,6 +19,7 @@
 - yt-dlp
 - docling
 - llm
+- [bpytop](https://github.com/aristocratos/bpytop)(python version of btop, to be used as a backup)
 > [!IMPORTANT]  
 > To install Python CLI applications, use the `uv` tool with the install command
 
