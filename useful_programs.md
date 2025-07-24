@@ -22,6 +22,7 @@ NOTE for installing python cli applications use uv tool install
 - [bat](https://github.com/sharkdp/bat) (better cat)
 - [glab](https://docs.gitlab.com/editor_extensions/gitlab_cli/)
 - tmux
+- dust (replacement for du)
 
 ## windows
 
