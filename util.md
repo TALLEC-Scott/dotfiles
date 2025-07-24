@@ -19,7 +19,7 @@
 - yt-dlp
 - docling
 - llm
-- [bpytop](https://github.com/aristocratos/bpytop) (python version of btop, to be used as a backup)
+- [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
 > [!IMPORTANT]  
 > To install Python CLI applications, use the `uv` tool with the install command
 
@@ -40,7 +40,7 @@
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
 - [asciinema](https://github.com/asciinema/asciinema)
 ### From source
-- [btop](https://github.com/aristocratos/btop) (with gpu enabled)
+- [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
 
 
 ## windows
