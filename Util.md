@@ -1,9 +1,9 @@
 
+# Util
 
-
-## CLI util linux
-NOTE for installing python cli applications use uv tool install
-
+## CLI util (Debian-based Linux)
+> [!IMPORTANT]  
+> For installing python cli applications use uv tool install
 
 ### sh
 - ollama (running llms locally)
