@@ -57,6 +57,7 @@ NOTE for installing python cli applications use uv tool install
 
 - Wallpaper Engine 
 - NordVPN
+- OVPN
 - qBitTorrent
 - VLC
 
