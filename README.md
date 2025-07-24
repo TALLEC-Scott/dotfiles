@@ -1,7 +1,6 @@
 # Dotfiles Repository
 
-This repository contains configuration files for a personalized development environment. It includes `.vimrc` for Vim configuration and `.bashrc` for shell customization.
-
+This repository contains configuration files for a personalized development environment.
 ---
 
 ## **Included Files**
