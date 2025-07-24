@@ -36,7 +36,7 @@
 - tmux
 - dust (replacement for du)
 - gh
-- btm (system monitor)
+- btm (better htop)
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
