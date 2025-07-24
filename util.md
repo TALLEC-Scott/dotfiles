@@ -20,7 +20,7 @@
 - docling
 - llm
 > [!IMPORTANT]  
-> For installing python cli applications use uv tool install
+> To install Python CLI applications, use the `uv` tool with the install command
 
 
 ### Deb
