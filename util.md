@@ -35,6 +35,7 @@
 - [glab](https://docs.gitlab.com/editor_extensions/gitlab_cli/)
 - tmux
 - dust (replacement for du)
+- gh
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
