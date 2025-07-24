@@ -54,7 +54,7 @@
 - f.lux
 - cyberDuck - FTP
 
-[Personal]
+### Personal
 
 - Wallpaper Engine 
 - NordVPN
