@@ -51,7 +51,7 @@
   - Hosts File Editor
   - Env Vars
   - WorkSpaces
-- flux
+- f.lux
 - cyberDuck - FTP
 
 [Personal]
