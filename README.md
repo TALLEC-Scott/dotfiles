@@ -92,18 +92,6 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 
 ---
 
-## **Contributing**
-
-If you'd like to contribute improvements to these dotfiles, feel free to submit a pull request or open an issue.
-
----
-
-## **License**
-
-These dotfiles are open source and available under the [MIT License](LICENSE).
-
----
-
 ## **Credits**
 
 - [vim-plug](https://github.com/junegunn/vim-plug)
