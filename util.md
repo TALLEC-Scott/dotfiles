@@ -37,7 +37,7 @@
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
-
+- [asciinema](https://github.com/asciinema/asciinema)
 ### From source
 - [btop](https://github.com/aristocratos/btop) (with gpu enabled)
 
