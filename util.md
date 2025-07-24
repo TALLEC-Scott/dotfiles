@@ -77,8 +77,7 @@
 ## Productivity tools
 - Note Taking - Obsidian (synced with git), Confluence (legacy) and Notepad
 - Editor - Vim or VsCode (want to try Cursor, neovim and zed)
-- Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin
-
+- Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin, might want to try taskwarrior or org-mode
 ## Private Server
 - NAS
 - P2P torrent client
