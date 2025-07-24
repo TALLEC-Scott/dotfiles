@@ -28,7 +28,7 @@
 - lscpu
 - htop
 - ripgrep (rg is like grep, but faster and more intuitive)
-- [eza](https://eza.rocks/)(a modern replacement for ls)
+- [eza](https://eza.rocks/) (a modern replacement for ls)
 - lazy git
 - [lazy docker](https://github.com/jesseduffield/lazydocker)
 - [bat](https://github.com/sharkdp/bat) (better cat)
