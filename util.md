@@ -24,7 +24,7 @@
 - llm
 - [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
 > [!IMPORTANT]  
-> To install Python CLI applications, use the `uv` tool with the install command
+> To install Python CLI applications, use `uv tool install`
 
 
 ### Deb
