@@ -17,7 +17,7 @@
 - nvitop
 - nvisel (part of nvitop)
 - gpustat
-- neofetch (available in pip and deb)
+- hyfetch (fallback)
 - poetry
 - yt-dlp
 - docling
@@ -28,6 +28,7 @@
 
 
 ### Deb
+- neofetch
 - lscpu
 - htop
 - ripgrep (rg is like grep, but faster and more intuitive)
