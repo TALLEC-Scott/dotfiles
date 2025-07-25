@@ -15,6 +15,7 @@
 - precommit
 - wpm
 - nvitop
+- nvisel (part of nvitop)
 - gpustat
 - neofetch (available in pip and deb)
 - poetry
