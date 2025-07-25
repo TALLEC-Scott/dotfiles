@@ -134,7 +134,9 @@ alias gits="git status"
 alias cmb="cmake -S . -B build/"
 alias cmr="cmake --build build/"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias update='sudo apt -y update && sudo apt -y full-upgrade && sudo apt -y autoremove'
+alias update-apt='sudo apt -y update && sudo apt -y full-upgrade && sudo apt -y autoremove'
+alias update-uv='uv tool upgrade --all'
+alias update='update-apt && update-uv
 alias pipupdate='pip-review --local --auto && pip cache purge'
 alias uvupdate='uv self update' #uv python upgrade in preview mode
 
