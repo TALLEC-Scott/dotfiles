@@ -140,7 +140,7 @@ alias update='update-apt && update-uv'
 alias pipupdate='pip-review --local --auto && pip cache purge'
 alias uvupdate='uv self update' #uv python upgrade in preview mode
 
-alias nvitop='nvitop --colorful'
+alias nvitop='nvitop --colorful --interval 1'
 
 alias ninjac='ninja -C compile'
 alias glog='git log --all --decorate --oneline --graph'
