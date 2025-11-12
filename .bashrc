@@ -118,7 +118,8 @@ function ghtemplate() {
 # some more ls aliases
 alias reload='exec bash'
 alias hf='huggingface-cli'
-alias cat='bat --paging=never'
+alias cat='bat --paging=never --style=plain'
+alias catl='bat --paging=never'
 alias ls='eza'
 alias ll='ls -alF'
 alias la='ls -A'
