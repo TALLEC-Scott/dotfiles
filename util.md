@@ -31,8 +31,6 @@
 - neofetch
 - lscpu
 - htop
-- ripgrep (rg is like grep, but faster and more intuitive)
-- [eza](https://eza.rocks/) (a modern replacement for ls)
 - lazy git
 - [lazy docker](https://github.com/jesseduffield/lazydocker)
 - [bat](https://github.com/sharkdp/bat) (better cat)
@@ -46,6 +44,8 @@
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
 - [asciinema](https://github.com/asciinema/asciinema)
+- [eza](https://eza.rocks/) (a modern replacement for ls) (also avaliable in Debian)
+- ripgrep (rg is like grep, but faster and more intuitive (also in Debian)
 ### From source
 - [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
 
