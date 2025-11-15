@@ -23,6 +23,7 @@
 - docling
 - llm
 - [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
+- visidata
 > [!IMPORTANT]  
 > To install Python CLI applications, use `uv tool install`
 
