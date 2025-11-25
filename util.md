@@ -41,6 +41,7 @@
 - gh
 - btm (better htop)
 - glances (similar to htop)
+- bash-completion (autocomplete)
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
