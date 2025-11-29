@@ -1,4 +1,3 @@
-
 # Util
 
 ## CLI util (Debian-based Linux)
@@ -42,6 +41,13 @@
 - btm (better htop)
 - glances (similar to htop)
 - bash-completion (autocomplete)
+- ncdu — NCurses Disk Usage: Interactive disk usage analyzer
+  ```
+  sudo apt install ncdu
+  ncdu /  # scan root directory
+  ```
+  ncdu provides a curses-based interactive interface to browse disk usage, delete files, and visualize disk space consumption. It's great for quickly identifying large files and directories.
+  [GitHub](https://github.com/seaweedfs/ncdu) | [Man page](https://manpages.debian.org/bullseye/ncdu/ncdu.1.en.html)
 
 ### Cargo
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
