@@ -104,7 +104,7 @@
 - For IR - Perplexity Pro
   
 ## Private Servers
-- ADS-B Station running on rasberry pi server, [transmitting to flight radar](https://www.flightradar24.com/account/feed-stats/?id=74280)
+- ADS-B Station running on rasberry pi server, transmitting to flight radar
 - VPN Server for secure Access to NAS located on home network
 - NAS in Raid 1+0 about 10TB
 - P2P torrent client
