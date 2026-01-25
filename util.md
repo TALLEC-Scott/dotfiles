@@ -9,15 +9,16 @@
 - oh-my-posh
 
 ### PyPI
-- [ruff](https://docs.astral.sh/ruff/installation/)
+- [ruff](https://docs.astral.sh/ruff/installation/) (lint and format)
+- [ty](https://docs.astral.sh/ty/)
 - huggingface_hub[cli]
+- hf-mem
 - precommit
 - wpm
 - nvitop
 - nvisel (part of nvitop)
 - gpustat
 - hyfetch (fallback)
-- poetry
 - yt-dlp
 - docling
 - llm
@@ -53,9 +54,10 @@
 - [spotify-player-cli](https://github.com/aome510/spotify-player)
 - [asciinema](https://github.com/asciinema/asciinema)
 - [eza](https://eza.rocks/) (a modern replacement for ls) (also avaliable in Debian)
-- ripgrep (rg is like grep, but faster and more intuitive (also in Debian)
+- ripgrep (rg is like grep, but in rust and more intuitive (also in Debian)
 ### From source
 - [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
+- lolcat for noefetch gradiant
 
 
 ## windows
@@ -75,7 +77,6 @@
 ### PowerShell
 - posh-git
 - oh-my-posh
-
 
 ### Personal
 
@@ -101,6 +102,7 @@
 - Editor - Vim or VsCode (want to try Cursor, neovim and zed)
 - Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin, might want to try taskwarrior or org-mode
 - For IR - Perplexity Pro
+  
 ## Private Servers
 - ADS-B Station running on rasberry pi server, [transmitting to flight radar](https://www.flightradar24.com/account/feed-stats/?id=74280)
 - VPN Server for secure Access to NAS and parent's home network
