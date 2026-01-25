@@ -65,6 +65,7 @@
   - PowerToys Run - Spotlight search bar like in MacOS and Linux
   - Awake
   - Hosts File Editor
+  - Mouse WIthout Borders
   - Env Vars
   - WorkSpaces
 - f.lux
@@ -99,10 +100,13 @@
 - Note Taking - Obsidian (synced with git), Confluence (legacy) and Notepad
 - Editor - Vim or VsCode (want to try Cursor, neovim and zed)
 - Tasks - Gitlab issues, Todoist and Obsidian Kanban Plugin, might want to try taskwarrior or org-mode
-## Private Server
-- NAS
+- For IR - Perplexity Pro
+## Private Servers
+- ADS-B Station running on rasberry pi server, [transmitting to flight radar](https://www.flightradar24.com/account/feed-stats/?id=74280)
+- VPN Server for secure Access to NAS and parent's home network
+- NAS in Raid 1+0 about 10TB
 - P2P torrent client
 - limited VM capabilities, limited to 1-2 cpu cores per vm and 1GB of total RAM (should probably migrate), hosts:
-  - plex server (transcoding need for streaming is not supported by arm64)
+  - plex server (transcoding need for streaming is not supported by arm64, could we use FEX emulator (x86 -> Arm64 translation layer) to fix this, or should we just use our rasperry pi)
   - websites (scuba diving and portfolio website (WIP))
  
