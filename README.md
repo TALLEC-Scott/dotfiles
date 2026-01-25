@@ -84,9 +84,11 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 ## **TODO**
 
 - Add os conditionals depending on if on wsl or linux (maybe even diff distros)
-- update using work pc
+- Intead of os conditionals, maybe we should opt for nix to have an os agnostic config
+- Think about the git config or ways that we could sync configs accross environments
 - add ide specific configs and plugins
-- add style format
+- add style rules and lint rules that fit my taste
+- add tool or skills config for agentic coding
 - add outlook and workflow scripts
 - add windows powertoys config
 - include all util installation in a single script
