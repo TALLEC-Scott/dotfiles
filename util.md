@@ -105,7 +105,7 @@
   
 ## Private Servers
 - ADS-B Station running on rasberry pi server, [transmitting to flight radar](https://www.flightradar24.com/account/feed-stats/?id=74280)
-- VPN Server for secure Access to NAS and parent's home network
+- VPN Server for secure Access to NAS located on home network
 - NAS in Raid 1+0 about 10TB
 - P2P torrent client
 - limited VM capabilities, limited to 1-2 cpu cores per vm and 1GB of total RAM (should probably migrate), hosts:
