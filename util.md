@@ -24,6 +24,7 @@
 - llm
 - [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
 - visidata
+- deptry
 > [!IMPORTANT]  
 > To install Python CLI applications, use `uv tool install`
 
@@ -58,6 +59,9 @@
 ### From source
 - [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
 - lolcat for noefetch gradiant
+
+### Go
+OSV scanner 
 
 
 ## windows
