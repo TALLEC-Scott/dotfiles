@@ -62,6 +62,7 @@
 
 ### Go
 OSV scanner 
+dive (for scanning docker images and for ci)
 
 
 ## windows
