@@ -61,8 +61,8 @@
 - lolcat for noefetch gradiant
 
 ### Go
-OSV scanner 
-dive (for scanning docker images and for ci)
+- OSV scanner 
+- dive (for scanning docker images and for ci)
 
 
 ## windows
