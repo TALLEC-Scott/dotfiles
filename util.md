@@ -43,6 +43,7 @@
 - btm (better htop)
 - glances (similar to htop)
 - bash-completion (autocomplete)
+- [jq](https://jqlang.org/) (command-line JSON processor)
 - ncdu — NCurses Disk Usage: Interactive disk usage analyzer
   ```
   sudo apt install ncdu
