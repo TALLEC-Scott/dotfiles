@@ -81,6 +81,15 @@ curl -s https://ohmyposh.dev/install.sh | bash -s
 *Font* : JetBrainsMono NFM (Nerd Font Mono)
 
 *Theme* : Atomic (in the .bashrc)
+
+## Installing [jq](https://jqlang.org/)
+
+Command-line JSON processor, used to query and pretty-print JSON (API responses, config files).
+
+```bash
+sudo apt install -y jq
+```
+
 ## **TODO**
 
 - Add os conditionals depending on if on wsl or linux (maybe even diff distros)
