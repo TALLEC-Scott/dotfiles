@@ -8,6 +8,7 @@
     ./secrets.nix
     ./vpn.nix
     ./nas.nix
+    ./open.nix
   ];
 
   home = {
