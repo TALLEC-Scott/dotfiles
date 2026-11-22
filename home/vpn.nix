@@ -1,9 +1,10 @@
 { config, pkgs, ... }:
 let
   # WireGuard peer "scott-wsl" from the Freebox (keys in sops), run rootless with wireproxy.
-  # Only the Freebox is reachable through it, via a local SOCKS5 proxy (used by rclone).
+  # Nothing is routed system-wide: only programs using the SOCKS5 proxy go out through home
+  # (rclone for nas/kp-sync, Firefox for Netflix via windows/netflix.pac).
   wgConf = config.sops.secrets.wireguard_wsl.path;
-  allowed = "212.27.38.253/32, 192.168.0.254/32"; # mafreebox.freebox.fr, Freebox LAN
+  allowed = "0.0.0.0/0";
   proxy = "127.0.0.1:41080";
 
   vpn-nas = pkgs.writeShellScriptBin "vpn-nas" ''
