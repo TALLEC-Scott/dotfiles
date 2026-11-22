@@ -19,14 +19,47 @@ let
   '';
 
   vpn-nas = pkgs.writeShellScriptBin "vpn-nas" ''
-    # Connect to the home network (NAS) over OpenVPN. Ctrl+C disconnects.
+    # Home network (NAS) over OpenVPN, in the background.
+    #   vpn-nas up | down | status | log
     set -euo pipefail
-    [ -r "${ovpn}" ] && [ -r "${auth}" ] || { echo "VPN profile not decrypted (${ovpn}); is the age key installed? run hms" >&2; exit 1; }
-    exec sudo ${pkgs.openvpn}/bin/openvpn \
-      --config "${ovpn}" \
-      --auth-user-pass "${auth}" \
-      --script-security 2 --up ${up} --down ${down} \
-      --auth-nocache "$@"
+    pid=/run/vpn-nas.pid
+    log=/run/vpn-nas.log
+    ip=${pkgs.iproute2}/bin/ip
+
+    running() { [ -f "$pid" ] && [ -d "/proc/$(cat "$pid")" ]; }
+    addr() { $ip -4 -o addr show 2>/dev/null | awk '$2 ~ /^tap/ {print $2, $4}'; }
+
+    case "''${1:-status}" in
+      up)
+        if running; then echo "already connected"; addr; exit 0; fi
+        [ -r "${ovpn}" ] && [ -r "${auth}" ] || { echo "VPN secrets not decrypted; is the age key installed? run hms" >&2; exit 1; }
+        sudo ${pkgs.openvpn}/bin/openvpn \
+          --config "${ovpn}" \
+          --auth-user-pass "${auth}" \
+          --script-security 2 --up ${up} --down ${down} \
+          --auth-nocache \
+          --daemon vpn-nas --writepid "$pid" --log "$log"
+        echo -n "connecting"
+        for _ in $(seq 1 30); do
+          if sudo grep -q "Initialization Sequence Completed" "$log" 2>/dev/null; then
+            for _ in $(seq 1 15); do [ -n "$(addr)" ] && break; sleep 1; done
+            echo " ok"; addr; exit 0
+          fi
+          if ! running; then echo " failed"; sudo tail -n 15 "$log"; exit 1; fi
+          echo -n "."; sleep 1
+        done
+        echo " timeout (still trying in background; see: vpn-nas log)"; exit 1
+        ;;
+      down)
+        if running; then sudo kill "$(cat "$pid")"; sleep 1; sudo rm -f "$pid"; echo "disconnected"
+        else echo "not connected"; fi
+        ;;
+      status)
+        if running; then echo "connected (pid $(cat "$pid"))"; addr; else echo "not connected"; fi
+        ;;
+      log) sudo tail -n "''${2:-30}" "$log" ;;
+      *) echo "usage: vpn-nas up|down|status|log [lines]" >&2; exit 2 ;;
+    esac
   '';
 in
 {
