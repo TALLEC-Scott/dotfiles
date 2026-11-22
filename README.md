@@ -38,7 +38,9 @@ so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman
    Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.
 4. **KeePassXC database** (personal machine): `vpn-nas up && kp-merge` pulls it from the NAS into `~/.local/share/keepassxc/`.
 5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; WireGuard tunnels and Freebox certificates: `windows/wireguard/README.md`.
-6. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
+6. **Always on (WSL):** `sudo loginctl enable-linger $USER` (user services such as `vpn-nas` start with WSL), and a Windows Startup shortcut keeps WSL running from logon:
+   target `C:\Windows\System32\conhost.exe`, arguments `--headless C:\Windows\System32\wsl.exe -d Ubuntu --exec sleep infinity`.
+7. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
 
 ### Day to day
 - Edit a file in the repo, then apply it: `hms` (alias for `home-manager switch --flake ~/home/dotfiles`)
@@ -57,7 +59,7 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 - Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
 ### Home network (VPN + NAS)
-- `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (wireproxy; config in sops; no sudo). Nothing is routed system-wide: only programs using the SOCKS5 proxy `127.0.0.1:41080` go out through home (`nas`, `kp-sync`, and Firefox for Netflix).
+- `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (wireproxy as a systemd user service: starts with WSL, restarts if it dies; config in sops; no sudo). Nothing is routed system-wide: only programs using the SOCKS5 proxy `127.0.0.1:41080` go out through home (`nas`, `kp-sync`, and Firefox for Netflix).
 - Netflix + Freebox admin (mafreebox.freebox.fr) in Firefox (Windows): copy `windows/home.pac` to `C:\Users\<you>\home.pac`; Firefox → Settings → Network Settings → *Automatic proxy configuration URL* `file:///C:/Users/<you>/home.pac` + tick *Proxy DNS when using SOCKS v5*. Needs `vpn-nas up`. Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
 - KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly) syncs it with the NAS copy both ways when only one side changed (starts the VPN itself); if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
