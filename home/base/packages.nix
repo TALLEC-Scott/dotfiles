@@ -31,10 +31,10 @@
     asciinema
     spotify-player
     yt-dlp
+    ffmpeg
     visidata
 
     uv
     nodejs             # needed by coc.nvim (vim)
-    nerd-fonts.jetbrains-mono
   ];
 }

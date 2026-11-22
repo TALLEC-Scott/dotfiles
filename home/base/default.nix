@@ -36,5 +36,4 @@
     settings.core.editor = "vim";
   };
 
-  fonts.fontconfig.enable = true;
 }

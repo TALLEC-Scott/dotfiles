@@ -15,7 +15,6 @@ in
     osv-scanner
 
     # python
-    python312
     ruff
     ty
     deptry
@@ -29,7 +28,6 @@ in
     go
 
     # AI
-    ollama
     qwen-code          # `qwen`
   ];
 
