@@ -4,11 +4,10 @@ let
   uvTools = [ "hf-mem" ];
 in
 {
-  # Development toolchains and tools
   home.packages = with pkgs; [
     # workflow
-    gh                 # GitHub CLI
-    glab               # GitLab CLI
+    gh
+    glab
     lazydocker
     pre-commit
     dive

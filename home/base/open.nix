@@ -13,10 +13,10 @@ let
     file_ext='^(md|txt|pdf|py|sh|js|ts|json|ya?ml|toml|nix|c|h|cpp|hpp|rs|go|java|html?|css|csv|log|conf|ini|png|jpe?g|gif|svg|mp[34]|mkv|mov|zip|tar|gz|docx?|xlsx?|pptx?)$'
 
     target="$1"
-    if [ -e "$target" ]; then                                        # file or folder
+    if [ -e "$target" ]; then
       target=$(wslpath -w "$(realpath "$target")")
     elif [[ $target =~ $url_scheme && ! $target =~ $host_port ]]; then
-      :                                                              # URL, as is
+      :
     elif [[ $target =~ $domain ]] && ! [[ ''${BASH_REMATCH[2],,} =~ $file_ext ]]; then
       target="https://$target"                                       # bare domain
     else
@@ -27,5 +27,5 @@ let
 in
 {
   home.packages = [ (lib.hiPrio xdg-open) pkgs.xdg-utils ];
-  home.sessionVariables.BROWSER = "xdg-open";   # gh, python webbrowser, ... open links the same way
+  home.sessionVariables.BROWSER = "xdg-open";
 }

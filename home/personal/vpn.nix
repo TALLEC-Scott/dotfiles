@@ -32,7 +32,7 @@ let
         echo "started, but the Freebox isn't answering (journalctl --user -u vpn-nas)" >&2; exit 1 ;;
       down) sc stop vpn-nas; echo "disconnected" ;;
       status) if sc -q is-active vpn-nas; then echo "connected (SOCKS5 ${proxy})"; else echo "not connected"; fi ;;
-      check) check ;;                                        # exit 0 if the Freebox is reachable
+      check) check ;;
       proxy) sc -q is-active vpn-nas && echo "${proxy}" ;;   # the SOCKS5 proxy, for rclone
       *) echo "usage: vpn-nas up | down | status | check | proxy" >&2; exit 2 ;;
     esac
@@ -43,7 +43,6 @@ in
   sops.secrets.wireguard_windows = { };   # backup, for re-creating the Windows tunnels
   home.packages = [ vpn-nas ];
 
-  # Starts with the user session (with linger: when WSL starts), restarts if it dies
   systemd.user.services.vpn-nas = {
     Unit = { Description = "WireGuard to the Freebox (wireproxy SOCKS5 ${proxy})"; After = [ "sops-nix.service" ]; Wants = [ "sops-nix.service" ]; };
     Service = {

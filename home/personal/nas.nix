@@ -10,7 +10,6 @@ let
   # rclone remote "nas:" from env (login from sops, never on the command line)
   vpn = "${config.home.profileDirectory}/bin/vpn-nas";
   rcloneEnv = ''
-    # reach the Freebox through the VPN's SOCKS5 proxy
     if p=$(${vpn} proxy 2>/dev/null); then export RCLONE_FTP_SOCKS_PROXY="$p"; fi
     export RCLONE_CONFIG_NAS_TYPE=ftp RCLONE_CONFIG_NAS_HOST=${host}
     RCLONE_CONFIG_NAS_USER=$(sed -n 1p "${auth}"); export RCLONE_CONFIG_NAS_USER
@@ -20,7 +19,6 @@ let
   kpdb = "${config.xdg.dataHome}/keepassxc/Passwords.kdbx";
   rc = "${pkgs.rclone}/bin/rclone -q --ftp-concurrency 2 --low-level-retries 3";
 
-  # Shared part of kp-sync / kp-merge
   kpCommon = ''
     set -euo pipefail
     db="''${KPDB:-${kpdb}}"
@@ -43,7 +41,6 @@ let
   kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
     ${kpCommon}
     [ -r "$db" ] || { echo "no database at $db (new machine? run kp-merge)" >&2; exit 1; }
-    # bring the VPN up if needed (no sudo); give up quietly if offline
     reachable || ${vpn} up >/dev/null 2>&1 || true
     reachable || { echo "NAS not reachable; will retry"; exit 0; }
     fetch
@@ -119,7 +116,6 @@ in
   sops.secrets.nas_ftp_auth = { };
   home.packages = [ nas kp-sync kp-merge pkgs.rclone ];
 
-  # Sync the KeePassXC database with the NAS (when reachable)
   systemd.user.services.kp-sync = {
     Unit.Description = "Two-way sync of the KeePassXC database with the NAS";
     Service = {

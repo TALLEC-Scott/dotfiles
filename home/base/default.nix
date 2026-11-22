@@ -22,8 +22,6 @@
 
   programs.home-manager.enable = true;
 
-  # Weekly: delete generations older than 30 days (the current one is always kept),
-  # then remove Nix store files nothing uses any more.
   services.home-manager.autoExpire = {
     enable = true;
     frequency = "weekly";

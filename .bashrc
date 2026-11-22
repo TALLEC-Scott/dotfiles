@@ -1,7 +1,5 @@
-# Portable interactive bash config.
-# Loaded by Home Manager (home/bash.nix -> programs.bash.initExtra), which also
-# handles history, shell options, completion, the prompt and env vars.
-# Can still be sourced on its own on a machine without Nix.
+# Loaded by Home Manager (home/base/bash.nix), which also sets history, completion,
+# the prompt and env vars. Can still be sourced on its own without Nix.
 
 mkcdir()
 {
@@ -25,7 +23,7 @@ function ghtemplate() {
     fi
 }
 
-# Aliases: with Home Manager they are inlined from .bash_aliases (home/bash.nix);
+# Aliases: with Home Manager they are inlined from .bash_aliases (home/base/bash.nix);
 # without Nix, source them from the repo.
 DOTFILES="${DOTFILES:-$HOME/home/dotfiles}"
 command -v hms >/dev/null 2>&1 || alias hms >/dev/null 2>&1 || { [ -f "$DOTFILES/.bash_aliases" ] && . "$DOTFILES/.bash_aliases"; }
@@ -41,7 +39,7 @@ export SERVER_URL="http://127.0.0.1:8080"
 export LLM_API_URL="http://localhost:11434"
 export LLM_MODEL="gemma3n:e4b"
 
-# CUDA toolkit (only if installed on this machine)
+# CUDA toolkit
 if [ -d /usr/local/cuda ]; then
     export CUDA_PATH=/usr/local/cuda
     export PATH=$PATH:$CUDA_PATH/bin
@@ -50,32 +48,24 @@ if [ -d /usr/local/cuda ]; then
     export LDFLAGS="-L/usr/local/cuda/lib64"
 fi
 
-# API keys: exported from sops-nix secrets (home/secrets.nix)
-
-# KeePassXC database (lives in WSL; synced with the NAS by kp-sync / kp-merge)
+# KeePassXC database (synced with the NAS by kp-sync)
 export KPDB="${KPDB:-${XDG_DATA_HOME:-$HOME/.local/share}/keepassxc/Passwords.kdbx}"
 # kp <search> [timeout]       copy password (cleared after timeout, default 10 s)
 # kp <search> -a username     copy another field;  kp <search> -t   copy TOTP code
 kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
-kps() { keepassxc-cli search "$KPDB" "$@"; }   # list matching entries
-# kp-sync: sync with the NAS now (also runs on every save + hourly);  kp-merge: merge both copies (asks master password)
+kps() { keepassxc-cli search "$KPDB" "$@"; }
 
-# User PATH entries
 export PATH="$HOME/.local/bin:$PATH:$HOME/go/bin"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
-# hf CLI completion
 command -v hf >/dev/null && [ -f ~/.bash_completions/hf.sh ] && . ~/.bash_completions/hf.sh
 
 # fzf key bindings + completion (after `set -o vi` and PATH edits)
 command -v fzf >/dev/null && eval "$(fzf --bash)"
 
-# Prompt: oh-my-posh (atomic) is set up by home/bash.nix
-
 # WSL: start in the Linux home when the shell opens in the Windows profile folder
 [[ $PWD == /mnt/c/Users/* && $(dirname "$PWD") == /mnt/c/Users ]] && cd ~
 
-# Startup banner (config: ~/.config/fastfetch/config.jsonc)
 clear && fastfetch
 
 # Machine-local settings (not tracked)

@@ -15,7 +15,6 @@ in
     secrets = lib.genAttrs envSecrets (_: { });
   };
 
-  # Export each decrypted secret (files are mode 0400, written by sops-nix.service)
   programs.bash.initExtra = lib.mkBefore (lib.concatMapStrings (name: ''
     [ -r "${config.sops.secrets.${name}.path}" ] && export ${name}="$(<"${config.sops.secrets.${name}.path}")"
   '') envSecrets);

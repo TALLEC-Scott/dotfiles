@@ -1,6 +1,5 @@
 { pkgs, ... }:
 {
-  # Everyday tools, on every profile
   home.packages = with pkgs; [
     # system / monitoring
     fastfetch
