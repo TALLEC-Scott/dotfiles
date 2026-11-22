@@ -24,7 +24,6 @@
 - gpustat
 - hyfetch (fallback)
 - yt-dlp
-- docling
 - llm
 - [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
 - visidata

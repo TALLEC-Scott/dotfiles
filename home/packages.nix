@@ -2,8 +2,7 @@
 let
   # Python CLIs installed with `uv tool install` on switch:
   #  - hf-mem: not in nixpkgs
-  #  - docling: not in the binary cache; building it locally runs a heavy test suite (OOM on small VMs)
-  uvTools = [ "hf-mem" "docling" ];
+  uvTools = [ "hf-mem" ];
 in
 {
   home.packages = with pkgs; [
