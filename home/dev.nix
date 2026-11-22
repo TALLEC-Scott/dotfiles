@@ -27,7 +27,6 @@ in
     cmake
     ninja
     go
-    jdk
 
     # AI
     ollama
