@@ -10,7 +10,7 @@ let
   up = pkgs.writeShellScript "vpn-nas-up" ''
     dev="$1"
     ${pkgs.iproute2}/bin/ip link set "$dev" up
-    if ! ${pkgs.iproute2}/bin/ip -4 addr show "$dev" | grep -q inet; then
+    if ! ${pkgs.iproute2}/bin/ip -4 addr show "$dev" | ${pkgs.gnugrep}/bin/grep -q inet; then
       ${pkgs.dhcpcd}/bin/dhcpcd -4 -b -q --nogateway --nohook resolv.conf "$dev"
     fi
   '';
