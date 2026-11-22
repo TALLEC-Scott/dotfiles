@@ -23,7 +23,6 @@ let
     db="''${KPDB:-${kpdb}}"
     state="''${XDG_STATE_HOME:-$HOME/.local/state}/kp-sync.sha256"   # hash of last synced version
     remote="nas:${kpDir}/Passwords.kdbx"
-    [ -r "$db" ] || { echo "no database at $db" >&2; exit 1; }
     sha() { sha256sum < "$1" | cut -d' ' -f1; }
     reachable() { timeout 3 bash -c '</dev/tcp/${host}/21' 2>/dev/null; }
     tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
@@ -40,6 +39,7 @@ let
   # Safe two-way sync (timer): fast-forward whichever side changed; never overwrite both-changed.
   kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
     ${kpCommon}
+    [ -r "$db" ] || { echo "no database at $db (new machine? run kp-merge)" >&2; exit 1; }
     reachable || { echo "NAS not reachable (vpn-nas up?); will retry"; exit 0; }
     fetch
     last=$(cat "$state" 2>/dev/null || true)
@@ -61,6 +61,11 @@ let
     ${kpCommon}
     reachable || { echo "NAS not reachable: vpn-nas up" >&2; exit 1; }
     fetch
+    if [ ! -e "$db" ]; then   # new machine: take the NAS copy
+      [ -s "$tmp/nas.kdbx" ] || { echo "no database locally or on the NAS" >&2; exit 1; }
+      mkdir -p "$(dirname "$db")"; chmod 700 "$(dirname "$db")"
+      cp "$tmp/nas.kdbx" "$db"; chmod 600 "$db"; record; echo "downloaded from NAS to $db"; exit 0
+    fi
     if [ -s "$tmp/nas.kdbx" ] && [ "$(sha "$tmp/nas.kdbx")" != "$(sha "$db")" ]; then
       cp "$db" "$db.bak-$(date +%F-%H%M%S)"
       ${pkgs.keepassxc}/bin/keepassxc-cli merge --same-credentials "$db" "$tmp/nas.kdbx"

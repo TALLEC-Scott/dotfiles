@@ -22,13 +22,23 @@ so the same setup works on any Linux distro, WSL (and macOS with a new host entr
 
 ## **Getting Started**
 
-```bash
-git clone https://github.com/TALLEC-Scott/dotfiles.git ~/home/dotfiles
-cd ~/home/dotfiles
-./bootstrap.sh          # installs Nix if needed, enables flakes, runs home-manager switch
-exec bash
-```
-Existing `~/.bashrc`, `~/.vimrc`, ... are moved to `*.backup` on the first switch.
+### New machine (new job, new PC, fresh WSL)
+1. **Host entry.** If the username, home or CPU differs, add a host to `hosts` in `flake.nix`:
+   `work = { system = "x86_64-linux"; username = "jdoe"; homeDirectory = "/home/jdoe"; };`
+2. **Age key** (decrypts `secrets/secrets.yaml`: API keys, VPN, NAS login).
+   - Personal machine: copy it from KeePassXC (entry `sops age key`) to `~/.config/sops/age/keys.txt`, `chmod 600`.
+   - Company machine: skip it unless policy allows personal secrets there. Everything else still works; secrets just stay encrypted.
+   - The database is on the NAS, which needs the VPN, which needs the age key. **Keep an offline copy of `Passwords.kdbx`** (USB or phone).
+3. **Install:**
+   ```bash
+   git clone https://github.com/TALLEC-Scott/dotfiles.git ~/home/dotfiles
+   cd ~/home/dotfiles && ./bootstrap.sh <host>   # default host: scott
+   exec bash
+   ```
+   Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.
+4. **KeePassXC database** (personal machine): `vpn-nas up && kp-merge` pulls it from the NAS into `~/.local/share/keepassxc/`.
+5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; OpenVPN profiles and Freebox certificates: `windows/openvpn/README.md`.
+6. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
 
 ### Day to day
 - Edit a file in the repo, then apply it: `hms` (alias for `home-manager switch --flake ~/home/dotfiles`)
