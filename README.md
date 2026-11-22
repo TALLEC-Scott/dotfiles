@@ -57,9 +57,9 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 - Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
 ### Home network (VPN + NAS)
-- `vpn-nas up | down | status`: WireGuard to the Freebox from WSL (config in sops). Only `mafreebox.freebox.fr` goes through it.
+- `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (wireproxy; config in sops; no sudo). Only the Freebox, via SOCKS5 `127.0.0.1:41080`, used by `nas` and `kp-sync`. Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
-- KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly, needs `vpn-nas up`) syncs it with the NAS copy both ways when only one side changed; if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
+- KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly) syncs it with the NAS copy both ways when only one side changed (starts the VPN itself); if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
 - Windows tunnels (admin only / full): see `windows/wireguard/README.md`.
 
 ### Vim plugins

@@ -1,49 +1,49 @@
 { config, pkgs, ... }:
 let
-  # WireGuard peer "scott-wsl" from the Freebox (keys in sops). Only these go through
-  # the tunnel; everything else (and DNS) stays on the normal connection.
+  # WireGuard peer "scott-wsl" from the Freebox (keys in sops), run rootless with wireproxy.
+  # Only the Freebox is reachable through it, via a local SOCKS5 proxy (used by rclone).
   wgConf = config.sops.secrets.wireguard_wsl.path;
   allowed = "212.27.38.253/32, 192.168.0.254/32"; # mafreebox.freebox.fr, Freebox LAN
-  iface = "wgnas";
-  dir = "/run/vpn-nas";
-  wg-quick = "${pkgs.wireguard-tools}/bin/wg-quick";
+  proxy = "127.0.0.1:41080";
 
   vpn-nas = pkgs.writeShellScriptBin "vpn-nas" ''
-    # WireGuard to the Freebox; routes only mafreebox.freebox.fr.  vpn-nas up | down | status
+    # vpn-nas up | down | status | check | proxy
     set -euo pipefail
-    ip=${pkgs.iproute2}/bin/ip
-    isup() { $ip link show ${iface} >/dev/null 2>&1; }
-    show() { $ip -4 -o addr show ${iface} | awk '{print $2, $4}'; $ip route show dev ${iface} | sed 's/^/  route /'; }
+    run="''${XDG_RUNTIME_DIR:-$HOME/.cache}/vpn-nas"
+    pidf="$run/wireproxy.pid"
+    running() { [ -f "$pidf" ] && [ -d "/proc/$(cat "$pidf")" ]; }
+    check() { running && ${pkgs.netcat-openbsd}/bin/nc -z -w5 -X 5 -x ${proxy} 212.27.38.253 21 2>/dev/null; }
 
     case "''${1:-status}" in
       up)
-        if isup; then echo "already connected"; show; exit 0; fi
+        if running; then echo "connected (SOCKS5 ${proxy})"; exit 0; fi
         [ -r "${wgConf}" ] || { echo "WireGuard config not decrypted; is the age key installed? run hms" >&2; exit 1; }
-        # Freebox config, minus its DNS and AllowedIPs, plus ours
-        conf=$(awk -v allowed="${allowed}" '
+        mkdir -p "$run"; chmod 700 "$run"
+        # Freebox config, with our AllowedIPs/DNS and a SOCKS5 listener
+        awk -v allowed="${allowed}" '
+          /^\[Interface\]/ {print; print "DNS = 212.27.38.253"; next}
           /^\[Peer\]/ {print; print "AllowedIPs = " allowed; next}
-          /^(DNS|AllowedIPs)[[:space:]]*=/ {next}
-          {print}' "${wgConf}")
-        sudo install -d -m 700 ${dir}
-        printf '%s\n' "$conf" | sudo tee ${dir}/${iface}.conf >/dev/null
-        sudo chmod 600 ${dir}/${iface}.conf
-        sudo ${wg-quick} up ${dir}/${iface}.conf 2>&1 | grep -vE '^\[#\]' || true
-        if ping -c1 -W5 192.168.0.254 >/dev/null 2>&1; then echo "connected"; show
-        else echo "tunnel up but Freebox not answering; check: sudo wg show" >&2; exit 1; fi
+          /^(DNS|AllowedIPs)[[:space:]]*=/ {next} {print}
+          END {print "\n[Socks5]\nBindAddress = ${proxy}"}' "${wgConf}" > "$run/wireproxy.conf"
+        chmod 600 "$run/wireproxy.conf"
+        nohup ${pkgs.wireproxy}/bin/wireproxy -s -c "$run/wireproxy.conf" >"$run/wireproxy.log" 2>&1 &
+        echo $! > "$pidf"
+        for _ in $(seq 1 10); do check && { echo "connected (SOCKS5 ${proxy})"; exit 0; }; sleep 1; done
+        echo "started, but the Freebox isn't answering (log: $run/wireproxy.log)" >&2; exit 1
         ;;
       down)
-        if isup; then sudo ${wg-quick} down ${dir}/${iface}.conf 2>&1 | grep -vE '^\[#\]' || true; sudo rm -f ${dir}/${iface}.conf; echo "disconnected"
+        if running; then kill "$(cat "$pidf")"; rm -f "$pidf" "$run/wireproxy.conf"; echo "disconnected"
         else echo "not connected"; fi
         ;;
-      status)
-        if isup; then echo "connected"; show; else echo "not connected"; fi
-        ;;
-      *) echo "usage: vpn-nas up|down|status" >&2; exit 2 ;;
+      status) if running; then echo "connected (SOCKS5 ${proxy})"; else echo "not connected"; fi ;;
+      check) check ;;                       # exit 0 if the Freebox is reachable
+      proxy) running && echo "${proxy}" ;;  # the SOCKS5 proxy, for rclone
+      *) echo "usage: vpn-nas up | down | status | check | proxy" >&2; exit 2 ;;
     esac
   '';
 in
 {
   sops.secrets.wireguard_wsl = { };
   sops.secrets.wireguard_windows = { };   # backup, for re-creating the Windows tunnels
-  home.packages = [ vpn-nas pkgs.wireguard-tools ];
+  home.packages = [ vpn-nas ];
 }

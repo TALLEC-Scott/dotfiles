@@ -2,13 +2,16 @@
 let
   # "login\npassword" for the Freebox FTP server, from sops
   auth = config.sops.secrets.nas_ftp_auth.path;
-  host = "mafreebox.freebox.fr"; # routed through the tunnel by vpn-nas
+  host = "mafreebox.freebox.fr"; # reached through vpn-nas (SOCKS5)
   # Top folder on the NAS (the Freebox partition name)
   nasRoot = "NAS Freebox";
   kpDir = "${nasRoot}/0-documents-importants/kee-pass-xc";
 
   # rclone remote "nas:" from env (login from sops, never on the command line)
+  vpn = "${config.home.profileDirectory}/bin/vpn-nas";
   rcloneEnv = ''
+    # reach the Freebox through the VPN's SOCKS5 proxy
+    if p=$(${vpn} proxy 2>/dev/null); then export RCLONE_FTP_SOCKS_PROXY="$p"; fi
     export RCLONE_CONFIG_NAS_TYPE=ftp RCLONE_CONFIG_NAS_HOST=${host}
     RCLONE_CONFIG_NAS_USER=$(sed -n 1p "${auth}"); export RCLONE_CONFIG_NAS_USER
     RCLONE_CONFIG_NAS_PASS=$(sed -n 2p "${auth}" | ${pkgs.rclone}/bin/rclone obscure -); export RCLONE_CONFIG_NAS_PASS
@@ -24,7 +27,7 @@ let
     state="''${XDG_STATE_HOME:-$HOME/.local/state}/kp-sync.sha256"   # hash of last synced version
     remote="nas:${kpDir}/Passwords.kdbx"
     sha() { sha256sum < "$1" | cut -d' ' -f1; }
-    reachable() { timeout 3 bash -c '</dev/tcp/${host}/21' 2>/dev/null; }
+    reachable() { ${vpn} check; }
     tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
     ${rcloneEnv}
     fetch() { ${rc} copyto "$remote" "$tmp/nas.kdbx" 2>/dev/null || true; }
@@ -40,7 +43,9 @@ let
   kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
     ${kpCommon}
     [ -r "$db" ] || { echo "no database at $db (new machine? run kp-merge)" >&2; exit 1; }
-    reachable || { echo "NAS not reachable (vpn-nas up?); will retry"; exit 0; }
+    # bring the VPN up if needed (no sudo); give up quietly if offline
+    reachable || ${vpn} up >/dev/null 2>&1 || true
+    reachable || { echo "NAS not reachable; will retry"; exit 0; }
     fetch
     last=$(cat "$state" 2>/dev/null || true)
     l=$(sha "$db")
@@ -84,7 +89,7 @@ let
       mount)
         if mountpoint -q "$mnt"; then echo "already mounted at $mnt"; exit 0; fi
         [ -r "${auth}" ] || { echo "NAS login not decrypted (${auth}); run hms" >&2; exit 1; }
-        timeout 3 bash -c '</dev/tcp/${host}/21' 2>/dev/null \
+        ${vpn} check \
           || { echo "NAS not reachable at ${host}; connect first: vpn-nas up" >&2; exit 1; }
         ${rcloneEnv}
         mkdir -p "$mnt" "$(dirname "$log")"
