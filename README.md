@@ -10,29 +10,30 @@ so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman
 
 | Path | What |
 | --- | --- |
-| `flake.nix` | Entry point; one `homeConfigurations.<host>` per machine (`scott`, `scott-arm`) |
-| `home/packages.nix` | All CLI tools (previously spread across apt, cargo, go, uv, source builds) |
-| `home/bash.nix` | Bash options, env vars, completion, oh-my-posh prompt; loads `.bashrc` |
-| `home/vim.nix` | Vim + plugins (dracula, airline, coc.nvim, spaceduck, vim-rainbow); loads `.vimrc` |
-| `home/files.nix` | Links `.config/fastfetch` (system info splash, 3DS logo) |
-| `.bashrc` / `.vimrc` | Your aliases, functions and vim settings: plain files, still usable without Nix |
+| `flake.nix` | Entry point: the **profiles** (`scott`, `work`, `server`, `minimal`, `server-arm`) |
+| `home/base/` | Every profile: bash, vim, git, fastfetch, `xdg-open`, everyday CLI tools, Home Manager settings |
+| `home/dev.nix` | Toolchains and dev tools (gcc, clang-tools, go, Java, Python tools, ollama…) |
+| `home/personal/` | Secrets (sops), home VPN (`vpn-nas`), NAS (`nas`), KeePassXC sync. Needs the age key |
+| `.bashrc` / `.bash_aliases` / `.vimrc` | Your aliases, functions and vim settings: plain files, still usable without Nix |
 | `bootstrap.sh` | One-shot setup on a new machine |
+
+**Profiles:** `scott` = base + dev + personal (this PC) · `work` = base + dev (company machine: no personal secrets) · `server` = base + personal · `minimal` = base. Apply one with `home-manager switch --flake ~/home/dotfiles#<profile>`.
 
 ---
 
 ## **Getting Started**
 
 ### New machine (new job, new PC, fresh WSL)
-1. **Host entry.** If the username, home or CPU differs, add a host to `hosts` in `flake.nix`:
-   `work = { system = "x86_64-linux"; username = "jdoe"; homeDirectory = "/home/jdoe"; };`
+1. **Profile.** Pick one (see above). If the username or CPU differs, add an entry in `flake.nix`, e.g.
+   `work-jdoe = mkHome { modules = profiles.work; username = "jdoe"; };`
 2. **Age key** (decrypts `secrets/secrets.yaml`: API keys, VPN, NAS login).
    - Personal machine: copy it from KeePassXC (entry `sops age key`) to `~/.config/sops/age/keys.txt`, `chmod 600`.
-   - Company machine: skip it unless policy allows personal secrets there. Everything else still works; secrets just stay encrypted.
+   - Company machine: use the `work` profile, which has no secrets at all.
    - The database is on the NAS, which needs the VPN, which needs the age key. **Keep an offline copy of `Passwords.kdbx`** (USB or phone).
 3. **Install:**
    ```bash
    git clone https://github.com/TALLEC-Scott/dotfiles.git ~/home/dotfiles
-   cd ~/home/dotfiles && ./bootstrap.sh <host>   # default host: scott
+   cd ~/home/dotfiles && ./bootstrap.sh <profile>   # scott (default), work, server, minimal
    exec bash
    ```
    Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.

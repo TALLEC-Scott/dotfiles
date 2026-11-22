@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Set up this dotfiles repo on any Linux distro (or WSL) with Nix + Home Manager.
-# Usage: ./bootstrap.sh [host]   (host = a key of homeConfigurations in flake.nix, default: scott)
+# Usage: ./bootstrap.sh [profile]   (scott (default), work, server, minimal, server-arm; see flake.nix)
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

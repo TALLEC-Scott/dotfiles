@@ -30,7 +30,7 @@ in
       spaceduck
       vim-rainbow
     ];
-    extraConfig = builtins.readFile ../.vimrc;
+    extraConfig = builtins.readFile ../../.vimrc;
   };
 
   home.sessionVariables = {

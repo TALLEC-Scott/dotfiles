@@ -1,15 +1,7 @@
 { pkgs, username, homeDirectory, ... }:
 {
-  imports = [
-    ./packages.nix
-    ./bash.nix
-    ./vim.nix
-    ./files.nix
-    ./secrets.nix
-    ./vpn.nix
-    ./nas.nix
-    ./open.nix
-  ];
+  # Base: shell, editor, everyday tools, Home Manager settings. Every profile includes it.
+  imports = [ ./packages.nix ./bash.nix ./vim.nix ./files.nix ./open.nix ];
 
   home = {
     inherit username homeDirectory;

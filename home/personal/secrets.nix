@@ -11,7 +11,7 @@ in
 {
   sops = {
     age.keyFile = "${config.xdg.configHome}/sops/age/keys.txt";
-    defaultSopsFile = ../secrets/secrets.yaml;
+    defaultSopsFile = ../../secrets/secrets.yaml;
     secrets = lib.genAttrs envSecrets (_: { });
   };
 

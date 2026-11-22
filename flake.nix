@@ -15,22 +15,25 @@
 
   outputs = { nixpkgs, home-manager, sops-nix, ... }:
     let
-      # One entry per machine/user. Add more (e.g. the Raspberry Pi) as needed.
-      hosts = {
-        scott = { system = "x86_64-linux"; username = "scott"; homeDirectory = "/home/scott"; };
-        scott-arm = { system = "aarch64-linux"; username = "scott"; homeDirectory = "/home/scott"; };
+      # Profiles = sets of modules. Pick one: home-manager switch --flake .#<profile>
+      profiles = {
+        scott = [ ./home/base ./home/dev.nix ./home/personal ];  # this PC
+        work = [ ./home/base ./home/dev.nix ];                    # company machine: no personal secrets/VPN
+        server = [ ./home/base ./home/personal ];                 # NAS + backups, no toolchains
+        minimal = [ ./home/base ];
       };
 
-      mkHome = _: h: home-manager.lib.homeManagerConfiguration {
-        pkgs = import nixpkgs {
-          inherit (h) system;
-          config.allowUnfree = true;
+      mkHome = { modules, system ? "x86_64-linux", username ? "scott" }:
+        home-manager.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          extraSpecialArgs = { inherit username; homeDirectory = "/home/${username}"; };
+          modules = [ sops-nix.homeManagerModules.sops ] ++ modules;
         };
-        extraSpecialArgs = { inherit (h) username homeDirectory; };
-        modules = [ sops-nix.homeManagerModules.sops ./home ];
-      };
     in
     {
-      homeConfigurations = builtins.mapAttrs mkHome hosts;
+      homeConfigurations = builtins.mapAttrs (_: modules: mkHome { inherit modules; }) profiles // {
+        # Other CPUs / usernames: add entries like these
+        server-arm = mkHome { modules = profiles.server; system = "aarch64-linux"; };  # Raspberry Pi
+      };
     };
 }

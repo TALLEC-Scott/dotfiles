@@ -20,8 +20,8 @@
       fi
 
       DOTFILES="''${DOTFILES:-$HOME/home/dotfiles}"
-      ${builtins.readFile ../.bash_aliases}
-      ${builtins.readFile ../.bashrc}
+      ${builtins.readFile ../../.bash_aliases}
+      ${builtins.readFile ../../.bashrc}
     '';
   };
 
