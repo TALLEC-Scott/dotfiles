@@ -15,8 +15,6 @@
     ncdu
 
     # git
-    gh
-    glab
     lazygit
 
     # shell niceties

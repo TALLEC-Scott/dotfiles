@@ -7,6 +7,8 @@ in
   # Development toolchains and tools
   home.packages = with pkgs; [
     # workflow
+    gh                 # GitHub CLI
+    glab               # GitLab CLI
     lazydocker
     pre-commit
     dive
