@@ -20,11 +20,12 @@ let
         if running; then echo "connected (SOCKS5 ${proxy})"; exit 0; fi
         [ -r "${wgConf}" ] || { echo "WireGuard config not decrypted; is the age key installed? run hms" >&2; exit 1; }
         mkdir -p "$run"; chmod 700 "$run"
-        # Freebox config, with our AllowedIPs/DNS and a SOCKS5 listener
+        # Freebox config, with our AllowedIPs/DNS, a SOCKS5 listener, and MTU 1200:
+        # the Freebox's 1360 is too big on some networks (large TLS handshakes, e.g. Firefox, hang)
         awk -v allowed="${allowed}" '
-          /^\[Interface\]/ {print; print "DNS = 212.27.38.253"; next}
+          /^\[Interface\]/ {print; print "DNS = 212.27.38.253"; print "MTU = 1200"; next}
           /^\[Peer\]/ {print; print "AllowedIPs = " allowed; next}
-          /^(DNS|AllowedIPs)[[:space:]]*=/ {next} {print}
+          /^(DNS|AllowedIPs|MTU)[[:space:]]*=/ {next} {print}
           END {print "\n[Socks5]\nBindAddress = ${proxy}"}' "${wgConf}" > "$run/wireproxy.conf"
         chmod 600 "$run/wireproxy.conf"
         nohup ${pkgs.wireproxy}/bin/wireproxy -s -c "$run/wireproxy.conf" >"$run/wireproxy.log" 2>&1 &
