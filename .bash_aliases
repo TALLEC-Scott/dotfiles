@@ -1,6 +1,6 @@
 # Aliases: sourced by .bashrc (from the dotfiles repo)
 
-alias reload='exec bash'
+alias reload='unset POSH_THEME POSH_SESSION_ID; exec bash'  # unset: hms clears the oh-my-posh cache
 alias cat='bat --paging=never'
 alias cap="cat -p"
 alias ls='eza --icons --git --group-directories-first'
