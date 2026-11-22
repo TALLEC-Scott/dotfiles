@@ -9,7 +9,7 @@
   };
 
   # Lets Home Manager work on non-NixOS distros (XDG_DATA_DIRS, locales, etc.)
-  targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux;
+  targets.genericLinux.enable = true;
   # Terminal only: no Nix-provided OpenGL/Vulkan drivers (Mesa, ~1 GB). CUDA tools use the
   # system driver (on WSL: /usr/lib/wsl/lib, see bash.nix).
   targets.genericLinux.gpu.enable = false;
@@ -29,9 +29,6 @@
     store.cleanup = true;
   };
 
-  programs.git = {
-    enable = true;
-    settings.core.editor = "vim";
-  };
+  programs.git.enable = true;
 
 }

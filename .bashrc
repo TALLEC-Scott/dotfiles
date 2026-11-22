@@ -26,7 +26,7 @@ function ghtemplate() {
 # Aliases: with Home Manager they are inlined from .bash_aliases (home/base/bash.nix);
 # without Nix, source them from the repo.
 DOTFILES="${DOTFILES:-$HOME/home/dotfiles}"
-command -v hms >/dev/null 2>&1 || alias hms >/dev/null 2>&1 || { [ -f "$DOTFILES/.bash_aliases" ] && . "$DOTFILES/.bash_aliases"; }
+alias hms >/dev/null 2>&1 || { [ -f "$DOTFILES/.bash_aliases" ] && . "$DOTFILES/.bash_aliases"; }
 
 #enables vi style binds in bash
 set -o vi
@@ -48,13 +48,6 @@ if [ -d /usr/local/cuda ]; then
     export LDFLAGS="-L/usr/local/cuda/lib64"
 fi
 
-# KeePassXC database (synced with the NAS by kp-sync)
-export KPDB="${KPDB:-${XDG_DATA_HOME:-$HOME/.local/share}/keepassxc/Passwords.kdbx}"
-# kp <search> [timeout]       copy password (cleared after timeout, default 10 s)
-# kp <search> -a username     copy another field;  kp <search> -t   copy TOTP code
-kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
-kps() { keepassxc-cli search "$KPDB" "$@"; }
-
 export PATH="$HOME/.local/bin:$PATH:$HOME/go/bin"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
@@ -64,7 +57,7 @@ command -v hf >/dev/null && [ -f ~/.bash_completions/hf.sh ] && . ~/.bash_comple
 command -v fzf >/dev/null && eval "$(fzf --bash)"
 
 # WSL: start in the Linux home when the shell opens in the Windows profile folder
-[[ $PWD == /mnt/c/Users/* && $(dirname "$PWD") == /mnt/c/Users ]] && cd ~
+[[ ${PWD%/*} == /mnt/c/Users ]] && cd ~
 
 clear && fastfetch
 

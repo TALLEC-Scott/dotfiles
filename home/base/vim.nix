@@ -31,10 +31,6 @@ in
       vim-rainbow
     ];
     extraConfig = builtins.readFile ../../.vimrc;
-  };
-
-  home.sessionVariables = {
-    EDITOR = "vim";
-    VISUAL = "vim";
+    defaultEditor = true;
   };
 }

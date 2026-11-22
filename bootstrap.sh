@@ -13,11 +13,6 @@ if ! command -v nix >/dev/null 2>&1; then
   . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
 fi
 
-mkdir -p "$HOME/.config/nix"
-if ! grep -qs 'flakes' "$HOME/.config/nix/nix.conf"; then
-  echo "experimental-features = nix-command flakes" >> "$HOME/.config/nix/nix.conf"
-fi
-
 AGE_KEY="$HOME/.config/sops/age/keys.txt"
 if [ ! -f "$AGE_KEY" ]; then
   echo "!! No age key at $AGE_KEY: secrets (API keys) will not be decrypted."
@@ -26,6 +21,6 @@ fi
 
 echo ">> Activating Home Manager config '$HOST' from $REPO"
 # -b backup: existing ~/.bashrc, ~/.vimrc, ... are renamed to *.backup instead of failing
-nix run home-manager/master -- switch -b backup --flake "$REPO#$HOST"
+nix --extra-experimental-features "nix-command flakes" run home-manager/master -- switch -b backup --flake "$REPO#$HOST"
 
 echo ">> Done. Open a new shell (or run: exec bash)."

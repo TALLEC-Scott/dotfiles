@@ -9,7 +9,6 @@
     shellOptions = [ "histappend" "checkwinsize" ];
 
     sessionVariables = {
-      PIP_REQUIRE_VIRTUALENV = "false";
       UV_MANAGED_PYTHON = "1";
     };
 
@@ -19,7 +18,6 @@
         export LD_LIBRARY_PATH="/usr/lib/wsl/lib''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
       fi
 
-      DOTFILES="''${DOTFILES:-$HOME/home/dotfiles}"
       ${builtins.readFile ../../.bash_aliases}
       ${builtins.readFile ../../.bashrc}
     '';

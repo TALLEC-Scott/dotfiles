@@ -15,7 +15,8 @@ in
     secrets = lib.genAttrs envSecrets (_: { });
   };
 
-  programs.bash.initExtra = lib.mkBefore (lib.concatMapStrings (name: ''
-    [ -r "${config.sops.secrets.${name}.path}" ] && export ${name}="$(<"${config.sops.secrets.${name}.path}")"
-  '') envSecrets);
+  programs.bash.initExtra = lib.mkBefore (lib.concatMapStrings (name:
+    let p = config.sops.secrets.${name}.path; in ''
+      [ -r "${p}" ] && IFS= read -r ${name} < "${p}" && export ${name}
+    '') envSecrets);
 }

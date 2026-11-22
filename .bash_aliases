@@ -19,7 +19,6 @@ alias ga="git add"
 alias gits="git status"
 alias cmb="cmake -S . -B build/"
 alias cmr="cmake --build build/"
-alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
 alias glog='git log --all --decorate --oneline --graph'
 alias sshtallec='ssh scott@88.160.34.221 -p 50000'
 alias gcl='git clone'

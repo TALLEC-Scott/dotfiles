@@ -9,15 +9,16 @@ let
 
   # rclone remote "nas:" from env (login from sops, never on the command line)
   vpn = "${config.home.profileDirectory}/bin/vpn-nas";
+  rclone = "${pkgs.rclone}/bin/rclone";
   rcloneEnv = ''
     if p=$(${vpn} proxy 2>/dev/null); then export RCLONE_FTP_SOCKS_PROXY="$p"; fi
     export RCLONE_CONFIG_NAS_TYPE=ftp RCLONE_CONFIG_NAS_HOST=${host}
     RCLONE_CONFIG_NAS_USER=$(sed -n 1p "${auth}"); export RCLONE_CONFIG_NAS_USER
-    RCLONE_CONFIG_NAS_PASS=$(sed -n 2p "${auth}" | ${pkgs.rclone}/bin/rclone obscure -); export RCLONE_CONFIG_NAS_PASS
+    RCLONE_CONFIG_NAS_PASS=$(sed -n 2p "${auth}" | ${rclone} obscure -); export RCLONE_CONFIG_NAS_PASS
   '';
 
   kpdb = "${config.xdg.dataHome}/keepassxc/Passwords.kdbx";
-  rc = "${pkgs.rclone}/bin/rclone -q --ftp-concurrency 2 --low-level-retries 3";
+  rc = "${rclone} -q --ftp-concurrency 2 --low-level-retries 3";
 
   kpCommon = ''
     set -euo pipefail
@@ -25,9 +26,7 @@ let
     state="''${XDG_STATE_HOME:-$HOME/.local/state}/kp-sync.sha256"   # hash of last synced version
     remote="nas:${kpDir}/Passwords.kdbx"
     sha() { sha256sum < "$1" | cut -d' ' -f1; }
-    reachable() { ${vpn} check; }
     tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
-    ${rcloneEnv}
     fetch() { ${rc} copyto "$remote" "$tmp/nas.kdbx" 2>/dev/null || true; }
     upload() {
       ${rc} copyto "$db" "$remote"
@@ -35,14 +34,15 @@ let
       fetch; [ "$(sha "$tmp/nas.kdbx")" = "$(sha "$db")" ] || { echo "upload check failed" >&2; exit 1; }
     }
     record() { mkdir -p "$(dirname "$state")"; sha "$db" > "$state"; }
+    download() { cp "$tmp/nas.kdbx" "$db"; chmod 600 "$db"; record; }
   '';
 
   # Safe two-way sync (timer): fast-forward whichever side changed; never overwrite both-changed.
   kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
     ${kpCommon}
     [ -r "$db" ] || { echo "no database at $db (new machine? run kp-merge)" >&2; exit 1; }
-    reachable || ${vpn} up >/dev/null 2>&1 || true
-    reachable || { echo "NAS not reachable; will retry"; exit 0; }
+    ${vpn} check || ${vpn} up >/dev/null 2>&1 || { echo "NAS not reachable; will retry"; exit 0; }
+    ${rcloneEnv}
     fetch
     last=$(cat "$state" 2>/dev/null || true)
     l=$(sha "$db")
@@ -50,7 +50,7 @@ let
     r=$(sha "$tmp/nas.kdbx")
     if [ "$l" = "$r" ]; then record; echo "in sync"
     elif [ "$r" = "$last" ]; then upload; record; echo "uploaded local changes"
-    elif [ "$l" = "$last" ]; then cp "$tmp/nas.kdbx" "$db"; chmod 600 "$db"; record; echo "downloaded NAS changes"
+    elif [ "$l" = "$last" ]; then download; echo "downloaded NAS changes"
     else
       echo "both copies changed: run kp-merge" >&2
       ${pkgs.libnotify}/bin/notify-send "KeePassXC" "Both copies changed: run kp-merge" 2>/dev/null || true
@@ -61,12 +61,13 @@ let
   # Two-way merge (interactive, asks the master password once): NAS entries -> local, then upload.
   kp-merge = pkgs.writeShellScriptBin "kp-merge" ''
     ${kpCommon}
-    reachable || { echo "NAS not reachable: vpn-nas up" >&2; exit 1; }
+    ${vpn} check || { echo "NAS not reachable: vpn-nas up" >&2; exit 1; }
+    ${rcloneEnv}
     fetch
     if [ ! -e "$db" ]; then   # new machine: take the NAS copy
       [ -s "$tmp/nas.kdbx" ] || { echo "no database locally or on the NAS" >&2; exit 1; }
       mkdir -p "$(dirname "$db")"; chmod 700 "$(dirname "$db")"
-      cp "$tmp/nas.kdbx" "$db"; chmod 600 "$db"; record; echo "downloaded from NAS to $db"; exit 0
+      download; echo "downloaded from NAS to $db"; exit 0
     fi
     if [ -s "$tmp/nas.kdbx" ] && [ "$(sha "$tmp/nas.kdbx")" != "$(sha "$db")" ]; then
       cp "$db" "$db.bak-$(date +%F-%H%M%S)"
@@ -80,7 +81,6 @@ let
     set -euo pipefail
     mnt="$HOME/nas"
     log="''${XDG_CACHE_HOME:-$HOME/.cache}/nas-rclone.log"
-    rclone=${pkgs.rclone}/bin/rclone
 
     case "''${1:-status}" in
       mount)
@@ -92,7 +92,7 @@ let
         mkdir -p "$mnt" "$(dirname "$log")"
         # Freebox FTP allows few connections per user: cap them, reuse idle ones,
         # and cache listings so `ls` doesn't reopen connections every time.
-        $rclone mount nas: "$mnt" --daemon --vfs-cache-mode writes \
+        ${rclone} mount nas: "$mnt" --daemon --vfs-cache-mode writes \
           --ftp-concurrency 3 --checkers 2 --transfers 2 \
           --ftp-idle-timeout 5m --dir-cache-time 1h --attr-timeout 1m \
           --low-level-retries 3 \
@@ -115,6 +115,14 @@ in
 {
   sops.secrets.nas_ftp_auth = { };
   home.packages = [ nas kp-sync kp-merge pkgs.rclone ];
+  home.sessionVariables.KPDB = kpdb;
+
+  # kp <search> [timeout]       copy password (cleared after timeout, default 10 s)
+  # kp <search> -a username     copy another field;  kp <search> -t   copy TOTP code
+  programs.bash.initExtra = ''
+    kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
+    kps() { keepassxc-cli search "$KPDB" "$@"; }
+  '';
 
   systemd.user.services.kp-sync = {
     Unit.Description = "Two-way sync of the KeePassXC database with the NAS";

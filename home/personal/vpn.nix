@@ -5,6 +5,7 @@ let
   # (rclone for nas/kp-sync, Firefox for Netflix + mafreebox via windows/home.pac).
   wgConf = config.sops.secrets.wireguard_wsl.path;
   proxy = "127.0.0.1:41080";
+  freebox = "212.27.38.253"; # mafreebox.freebox.fr, also the Freebox DNS
   confFile = "%t/vpn-nas/wireproxy.conf"; # %t = $XDG_RUNTIME_DIR
 
   # Freebox config, with our AllowedIPs/DNS, a SOCKS5 listener, and MTU 1200:
@@ -14,7 +15,7 @@ let
     out="$1"; mkdir -p "$(dirname "$out")"; chmod 700 "$(dirname "$out")"
     umask 077
     ${pkgs.gawk}/bin/awk '
-      /^\[Interface\]/ {print; print "DNS = 212.27.38.253"; print "MTU = 1200"; next}
+      /^\[Interface\]/ {print; print "DNS = ${freebox}"; print "MTU = 1200"; next}
       /^\[Peer\]/ {print; print "AllowedIPs = 0.0.0.0/0"; next}
       /^(DNS|AllowedIPs|MTU)[[:space:]]*=/ {next} {print}
       END {print "\n[Socks5]\nBindAddress = ${proxy}"}' "${wgConf}" > "$out"
@@ -24,16 +25,17 @@ let
     # vpn-nas up | down | status | check | proxy   (systemd user service "vpn-nas")
     set -euo pipefail
     sc() { systemctl --user "$@"; }
-    check() { sc -q is-active vpn-nas && ${pkgs.netcat-openbsd}/bin/nc -z -w5 -X 5 -x ${proxy} 212.27.38.253 21 2>/dev/null; }
+    active() { sc -q is-active vpn-nas; }
+    check() { active && ${pkgs.netcat-openbsd}/bin/nc -z -w5 -X 5 -x ${proxy} ${freebox} 21 2>/dev/null; }
     case "''${1:-status}" in
       up)
         sc start vpn-nas
         for _ in $(seq 1 10); do check && { echo "connected (SOCKS5 ${proxy})"; exit 0; }; sleep 1; done
         echo "started, but the Freebox isn't answering (journalctl --user -u vpn-nas)" >&2; exit 1 ;;
       down) sc stop vpn-nas; echo "disconnected" ;;
-      status) if sc -q is-active vpn-nas; then echo "connected (SOCKS5 ${proxy})"; else echo "not connected"; fi ;;
+      status) if active; then echo "connected (SOCKS5 ${proxy})"; else echo "not connected"; fi ;;
       check) check ;;
-      proxy) sc -q is-active vpn-nas && echo "${proxy}" ;;   # the SOCKS5 proxy, for rclone
+      proxy) active && echo "${proxy}" ;;   # the SOCKS5 proxy, for rclone
       *) echo "usage: vpn-nas up | down | status | check | proxy" >&2; exit 2 ;;
     esac
   '';
