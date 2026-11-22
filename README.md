@@ -6,7 +6,7 @@ This repository contains configuration files for a personalized development envi
 ## **How it works**
 
 Everything is managed by [Nix](https://nixos.org) + [Home Manager](https://github.com/nix-community/home-manager),
-so the same setup works on any Linux distro, WSL (and macOS with a new host entry), with no `apt`/`dnf`/`pacman` involved.
+so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman` involved. Linux only (no macOS).
 
 | Path | What |
 | --- | --- |
@@ -78,7 +78,6 @@ a `pkgs.vimPlugins.<name>` entry, or a `fromGitHub { ... }` entry if it is not i
 ## **TODO**
 
 - ~~Add os conditionals depending on if on wsl or linux~~ / ~~use nix for an os agnostic config~~ (done: Home Manager flake)
-- add an `aarch64-darwin` host for macOS
 - Think about the git config or ways that we could sync configs accross environments
 - add ide specific configs and plugins
 - add style rules and lint rules that fit my taste
