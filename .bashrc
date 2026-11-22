@@ -60,7 +60,7 @@ kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
 kps() { keepassxc-cli search "$KPDB" "$@"; }   # list matching entries
 # back up the KeePassXC database to the NAS (needs: vpn-nas up && nas mount)
 kpbackup() {
-    local dst="$HOME/nas/NAS Freebox/0 Documents importants/KeePassXC"
+    local dst="$HOME/nas/NAS Freebox/0-documents-importants/KeePassXC"
     mountpoint -q "$HOME/nas" || { echo "NAS not mounted: vpn-nas up && nas mount" >&2; return 1; }
     mkdir -p "$dst" &&
     cp "$KPDB" "$dst/Passwords.kdbx" &&
