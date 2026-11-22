@@ -11,6 +11,9 @@ let
   # added (no default gateway, resolv.conf untouched), so normal traffic is unchanged.
   up = pkgs.writeShellScript "vpn-nas-up" ''
     dev="$1"
+    # IPv6: keep LAN addresses, but ignore the Freebox default route (internet stays local)
+    ${pkgs.procps}/bin/sysctl -q -w "net.ipv6.conf.$dev.accept_ra_defrtr=0"
+    ${pkgs.iproute2}/bin/ip -6 route flush dev "$dev" proto ra 2>/dev/null || true
     ${pkgs.iproute2}/bin/ip link set "$dev" up
     # always get a fresh lease (an old dhcpcd may hold a stale one)
     ${pkgs.dhcpcd}/bin/dhcpcd -x "$dev" 2>/dev/null || true
