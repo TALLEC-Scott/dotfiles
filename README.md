@@ -46,6 +46,11 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 - New machine: copy the age key to that path (`chmod 600`) before running `bootstrap.sh`
 - Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
+### Home network (VPN + NAS)
+- `vpn-nas up | down | status | log`: OpenVPN to the Freebox from WSL (profile + login in sops). Only `192.168.0.0/24` goes through it.
+- `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
+- Windows profiles (split tunnel / full tunnel): see `windows/openvpn/README.md`.
+
 ### Vim plugins
 Plugins are installed by Nix, so vim-plug is no longer used. To add one, put it in `home/vim.nix`:
 a `pkgs.vimPlugins.<name>` entry, or a `fromGitHub { ... }` entry if it is not in nixpkgs.

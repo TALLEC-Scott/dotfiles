@@ -7,6 +7,7 @@
     ./files.nix
     ./secrets.nix
     ./vpn.nix
+    ./nas.nix
   ];
 
   home = {
