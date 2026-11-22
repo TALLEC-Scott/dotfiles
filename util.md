@@ -1,6 +1,9 @@
 # Util
 
-## CLI util (Debian-based Linux)
+## CLI util (any Linux, via Nix)
+
+> [!NOTE]
+> Installed tools now live in `home/base/packages.nix` and `home/dev.nix`. The list below is kept for reference.
 
 
 ### sh
@@ -20,7 +23,6 @@
 - gpustat
 - hyfetch (fallback)
 - yt-dlp
-- docling
 - llm
 - [bpytop](https://github.com/aristocratos/bpytop) (python version of btop without gpu support, only to be used as a backup)
 - visidata
@@ -30,7 +32,7 @@
 
 
 ### Deb
-- neofetch
+- fastfetch
 - lscpu
 - htop
 - lazy git
@@ -58,8 +60,8 @@
 - [eza](https://eza.rocks/) (a modern replacement for ls) (also avaliable in Debian)
 - ripgrep (rg is like grep, but in rust and more intuitive (also in Debian)
 ### From source
-- [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
-- lolcat for noefetch gradiant
+- ~~[btop++](https://github.com/aristocratos/btop) (with gpu enabled)~~ now from Nix, GPU support built in
+- lolcat (rainbow output)
 
 ### Go
 - OSV scanner 
@@ -78,7 +80,7 @@
   - WorkSpaces
 - f.lux
 - cyberDuck - FTP
-- OVPN
+- WireGuard (VPN to the Freebox)
 
 ### PowerShell
 - posh-git

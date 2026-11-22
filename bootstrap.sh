@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Set up this dotfiles repo on any Linux distro (or WSL) with Nix + Home Manager.
+# Usage: ./bootstrap.sh [profile]   (scott (default), work, server, minimal, server-arm; see flake.nix)
+set -euo pipefail
+
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOST="${1:-scott}"
+
+if ! command -v nix >/dev/null 2>&1; then
+  echo ">> Installing Nix (multi-user)"
+  sh <(curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install) --daemon --yes
+  # shellcheck disable=SC1091
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+AGE_KEY="$HOME/.config/sops/age/keys.txt"
+if [ ! -f "$AGE_KEY" ]; then
+  echo "!! No age key at $AGE_KEY: secrets (API keys) will not be decrypted."
+  echo "   Copy it from KeePassXC (entry 'sops age key'), then: chmod 600 $AGE_KEY && hms"
+fi
+
+echo ">> Activating Home Manager config '$HOST' from $REPO"
+# -b backup: existing ~/.bashrc, ~/.vimrc, ... are renamed to *.backup instead of failing
+nix --extra-experimental-features "nix-command flakes" run home-manager/master -- switch -b backup --flake "$REPO#$HOST"
+
+echo ">> Done. Open a new shell (or run: exec bash)."
