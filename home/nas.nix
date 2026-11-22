@@ -2,7 +2,7 @@
 let
   # "login\npassword" for the Freebox FTP server, from sops
   auth = config.sops.secrets.nas_ftp_auth.path;
-  host = "192.168.0.254"; # Freebox on the home LAN (reach it with: vpn-nas up)
+  host = "mafreebox.freebox.fr"; # routed through the tunnel by vpn-nas
 
   nas = pkgs.writeShellScriptBin "nas" ''
     # Mount the Freebox NAS (FTP) at ~/nas with rclone (FUSE, no sudo).

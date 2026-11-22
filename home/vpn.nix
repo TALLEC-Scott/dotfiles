@@ -7,24 +7,39 @@ let
   # "login\npassword", also from sops (no prompt)
   auth = config.sops.secrets.openvpn_nas_auth.path;
 
-  # TAP bridge: the Freebox gives us a LAN address by DHCP. Only the LAN route is
-  # added (no default gateway, resolv.conf untouched), so normal traffic is unchanged.
+  # TAP bridge: the Freebox gives us a LAN address by DHCP. Only mafreebox.freebox.fr
+  # goes through the tunnel: no LAN /24, no default gateway, no IPv6, DNS untouched.
+  freeboxLan = "192.168.0.254";
+  mafreebox = "212.27.38.253"; # mafreebox.freebox.fr
+
+  # dhcpcd hook (replaces its default script): on every lease, keep only our routes
+  dhcpHook = pkgs.writeShellScript "vpn-nas-dhcp-hook" ''
+    ip=${pkgs.iproute2}/bin/ip
+    case "$reason" in
+      BOUND|RENEW|REBIND|REBOOT|STATIC)
+        $ip -4 route flush dev "$interface" proto dhcp
+        $ip route replace ${freeboxLan}/32 dev "$interface"
+        $ip route replace ${mafreebox}/32 via ${freeboxLan} dev "$interface"
+        ;;
+    esac
+  '';
+
   up = pkgs.writeShellScript "vpn-nas-up" ''
     dev="$1"
-    # IPv6: keep LAN addresses, but ignore the Freebox default route (internet stays local)
-    ${pkgs.procps}/bin/sysctl -q -w "net.ipv6.conf.$dev.accept_ra_defrtr=0"
+    # IPv6: no home addresses or routes over the tunnel
+    ${pkgs.procps}/bin/sysctl -q -w "net.ipv6.conf.$dev.accept_ra=0"
     ${pkgs.iproute2}/bin/ip -6 route flush dev "$dev" proto ra 2>/dev/null || true
     ${pkgs.iproute2}/bin/ip link set "$dev" up
     # always get a fresh lease (an old dhcpcd may hold a stale one)
     ${pkgs.dhcpcd}/bin/dhcpcd -x "$dev" 2>/dev/null || true
-    ${pkgs.dhcpcd}/bin/dhcpcd -4 -b -q --nogateway --nohook resolv.conf "$dev"
+    ${pkgs.dhcpcd}/bin/dhcpcd -4 -b -q --nogateway -c ${dhcpHook} "$dev"
   '';
   down = pkgs.writeShellScript "vpn-nas-down" ''
     ${pkgs.dhcpcd}/bin/dhcpcd -x "$1" 2>/dev/null || true
   '';
 
   vpn-nas = pkgs.writeShellScriptBin "vpn-nas" ''
-    # Home network (NAS) over OpenVPN, in the background.
+    # OpenVPN to the Freebox, in the background; routes only mafreebox.freebox.fr.
     #   vpn-nas up | down | status | log
     set -euo pipefail
     pid=/run/vpn-nas.pid

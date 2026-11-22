@@ -47,7 +47,7 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 - Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
 ### Home network (VPN + NAS)
-- `vpn-nas up | down | status | log`: OpenVPN to the Freebox from WSL (profile + login in sops). Only `192.168.0.0/24` goes through it.
+- `vpn-nas up | down | status | log`: OpenVPN to the Freebox from WSL (profile + login in sops). Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
 - Windows profiles (split tunnel / full tunnel): see `windows/openvpn/README.md`.
 
