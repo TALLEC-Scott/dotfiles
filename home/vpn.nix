@@ -2,7 +2,7 @@
 let
   # WireGuard peer "scott-wsl" from the Freebox (keys in sops), run rootless with wireproxy.
   # Nothing is routed system-wide: only programs using the SOCKS5 proxy go out through home
-  # (rclone for nas/kp-sync, Firefox for Netflix via windows/netflix.pac).
+  # (rclone for nas/kp-sync, Firefox for Netflix via windows/home.pac).
   wgConf = config.sops.secrets.wireguard_wsl.path;
   allowed = "0.0.0.0/0";
   proxy = "127.0.0.1:41080";

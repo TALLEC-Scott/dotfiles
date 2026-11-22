@@ -1,5 +1,6 @@
 # Aliases: sourced by .bashrc (from the dotfiles repo)
 
+alias grep='grep --color=auto'
 alias reload='unset POSH_THEME POSH_SESSION_ID; exec bash'  # unset: hms clears the oh-my-posh cache
 alias cat='bat --paging=never'
 alias cap="cat -p"

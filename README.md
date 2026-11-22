@@ -58,7 +58,7 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 
 ### Home network (VPN + NAS)
 - `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (wireproxy; config in sops; no sudo). Nothing is routed system-wide: only programs using the SOCKS5 proxy `127.0.0.1:41080` go out through home (`nas`, `kp-sync`, and Firefox for Netflix).
-- Netflix + Freebox admin (mafreebox.freebox.fr) in Firefox (Windows): copy `windows/netflix.pac` to `C:\Users\<you>\netflix.pac`; Firefox → Settings → Network Settings → *Automatic proxy configuration URL* `file:///C:/Users/<you>/netflix.pac` + tick *Proxy DNS when using SOCKS v5*. Needs `vpn-nas up`. Only `mafreebox.freebox.fr` goes through it.
+- Netflix + Freebox admin (mafreebox.freebox.fr) in Firefox (Windows): copy `windows/home.pac` to `C:\Users\<you>\netflix.pac`; Firefox → Settings → Network Settings → *Automatic proxy configuration URL* `file:///C:/Users/<you>/home.pac` + tick *Proxy DNS when using SOCKS v5*. Needs `vpn-nas up`. Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
 - KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly) syncs it with the NAS copy both ways when only one side changed (starts the VPN itself); if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
 - Windows tunnels (admin only / full): see `windows/wireguard/README.md`.
