@@ -24,7 +24,6 @@ in
     gcc
     cmake
     ninja
-    clang-tools        # clang-format for the `epiclang` alias
     go
     jdk
 
