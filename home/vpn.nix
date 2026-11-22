@@ -2,6 +2,8 @@
 let
   # Freebox OpenVPN profile (bridge/TAP). Encrypted in secrets/secrets.yaml.
   ovpn = config.sops.secrets.openvpn_nas.path;
+  # fixed (locally administered) MAC so the Freebox DHCP gives the same IP each time
+  mac = "02:00:5e:10:00:40";
   # "login\npassword", also from sops (no prompt)
   auth = config.sops.secrets.openvpn_nas_auth.path;
 
@@ -10,9 +12,9 @@ let
   up = pkgs.writeShellScript "vpn-nas-up" ''
     dev="$1"
     ${pkgs.iproute2}/bin/ip link set "$dev" up
-    if ! ${pkgs.iproute2}/bin/ip -4 addr show "$dev" | ${pkgs.gnugrep}/bin/grep -q inet; then
-      ${pkgs.dhcpcd}/bin/dhcpcd -4 -b -q --nogateway --nohook resolv.conf "$dev"
-    fi
+    # always get a fresh lease (an old dhcpcd may hold a stale one)
+    ${pkgs.dhcpcd}/bin/dhcpcd -x "$dev" 2>/dev/null || true
+    ${pkgs.dhcpcd}/bin/dhcpcd -4 -b -q --nogateway --nohook resolv.conf "$dev"
   '';
   down = pkgs.writeShellScript "vpn-nas-down" ''
     ${pkgs.dhcpcd}/bin/dhcpcd -x "$1" 2>/dev/null || true
@@ -38,6 +40,7 @@ let
           --auth-user-pass "${auth}" \
           --script-security 2 --up ${up} --down ${down} \
           --auth-nocache \
+          --dev tap0 --lladdr ${mac} \
           --daemon vpn-nas --writepid "$pid" --log "$log"
         echo -n "connecting"
         for _ in $(seq 1 30); do
