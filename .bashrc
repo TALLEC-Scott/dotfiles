@@ -52,14 +52,13 @@ fi
 
 # API keys: exported from sops-nix secrets (home/secrets.nix)
 
-# KeePassXC database (on WSL, ~/Passwords.kdbx links to the Windows copy)
-export KPDB="${KPDB:-$HOME/Passwords.kdbx}"
+# KeePassXC database (lives in WSL; synced with the NAS by kp-sync / kp-merge)
+export KPDB="${KPDB:-${XDG_DATA_HOME:-$HOME/.local/share}/keepassxc/Passwords.kdbx}"
 # kp <search> [timeout]       copy password (cleared after timeout, default 10 s)
 # kp <search> -a username     copy another field;  kp <search> -t   copy TOTP code
 kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
 kps() { keepassxc-cli search "$KPDB" "$@"; }   # list matching entries
-# back up the KeePassXC database to the NAS now (also runs every 15 min: kp-sync.timer)
-alias kpbackup='kp-sync --force'
+# kp-sync: sync with the NAS now (also runs on every save + hourly);  kp-merge: merge both copies (asks master password)
 
 # User PATH entries
 export PATH="$HOME/.local/bin:$PATH:$HOME/go/bin"

@@ -14,31 +14,59 @@ let
     RCLONE_CONFIG_NAS_PASS=$(sed -n 2p "${auth}" | ${pkgs.rclone}/bin/rclone obscure -); export RCLONE_CONFIG_NAS_PASS
   '';
 
-  # One-way backup of the KeePassXC database to the NAS, when it changed and the NAS is reachable
-  kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
+  kpdb = "${config.xdg.dataHome}/keepassxc/Passwords.kdbx";
+  rc = "${pkgs.rclone}/bin/rclone -q --ftp-concurrency 2 --low-level-retries 3";
+
+  # Shared part of kp-sync / kp-merge
+  kpCommon = ''
     set -euo pipefail
-    # rclone skips symlinks: resolve ~/Passwords.kdbx -> the Windows file
-    src=$(readlink -f "''${KPDB:-$HOME/Passwords.kdbx}")
-    state="''${XDG_STATE_HOME:-$HOME/.local/state}/kp-sync.sha256"
-    [ -r "$src" ] || { echo "no database at $src" >&2; exit 1; }
-    sum=$(sha256sum < "$src" | cut -d' ' -f1)
-    if [ "''${1:-}" != "--force" ] && [ "$(cat "$state" 2>/dev/null)" = "$sum" ]; then
-      echo "unchanged"; exit 0
-    fi
-    if ! timeout 3 bash -c '</dev/tcp/${host}/21' 2>/dev/null; then
-      echo "NAS not reachable (vpn-nas up?); will retry"; exit 0
-    fi
-    [ -r "${auth}" ] || { echo "NAS login not decrypted; run hms" >&2; exit 1; }
+    db="''${KPDB:-${kpdb}}"
+    state="''${XDG_STATE_HOME:-$HOME/.local/state}/kp-sync.sha256"   # hash of last synced version
+    remote="nas:${kpDir}/Passwords.kdbx"
+    [ -r "$db" ] || { echo "no database at $db" >&2; exit 1; }
+    sha() { sha256sum < "$1" | cut -d' ' -f1; }
+    reachable() { timeout 3 bash -c '</dev/tcp/${host}/21' 2>/dev/null; }
+    tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
     ${rcloneEnv}
-    rc="${pkgs.rclone}/bin/rclone -q --ftp-concurrency 2 --low-level-retries 3"
-    $rc copyto "$src" "nas:${kpDir}/Passwords.kdbx"
-    $rc copyto "$src" "nas:${kpDir}/Passwords-$(date +%F).kdbx"
-    size=$($rc size --json "nas:${kpDir}/Passwords.kdbx" | ${pkgs.jq}/bin/jq .bytes)
-    [ "$size" = "$(stat -Lc %s "$src")" ] || { echo "size mismatch after upload" >&2; exit 1; }
-    mkdir -p "$(dirname "$state")"; echo "$sum" > "$state"
-    echo "backed up to NAS: ${kpDir}"
+    fetch() { ${rc} copyto "$remote" "$tmp/nas.kdbx" 2>/dev/null || true; }
+    upload() {
+      ${rc} copyto "$db" "$remote"
+      ${rc} copyto "$db" "nas:${kpDir}/Passwords-$(date +%F).kdbx"
+      fetch; [ "$(sha "$tmp/nas.kdbx")" = "$(sha "$db")" ] || { echo "upload check failed" >&2; exit 1; }
+    }
+    record() { mkdir -p "$(dirname "$state")"; sha "$db" > "$state"; }
   '';
 
+  # Safe two-way sync (timer): fast-forward whichever side changed; never overwrite both-changed.
+  kp-sync = pkgs.writeShellScriptBin "kp-sync" ''
+    ${kpCommon}
+    reachable || { echo "NAS not reachable (vpn-nas up?); will retry"; exit 0; }
+    fetch
+    last=$(cat "$state" 2>/dev/null || true)
+    l=$(sha "$db")
+    if [ ! -s "$tmp/nas.kdbx" ]; then upload; record; echo "uploaded (no copy on NAS yet)"; exit 0; fi
+    r=$(sha "$tmp/nas.kdbx")
+    if [ "$l" = "$r" ]; then record; echo "in sync"
+    elif [ "$r" = "$last" ]; then upload; record; echo "uploaded local changes"
+    elif [ "$l" = "$last" ]; then cp "$tmp/nas.kdbx" "$db"; chmod 600 "$db"; record; echo "downloaded NAS changes"
+    else
+      echo "both copies changed: run kp-merge" >&2
+      ${pkgs.libnotify}/bin/notify-send "KeePassXC" "Both copies changed: run kp-merge" 2>/dev/null || true
+      exit 1
+    fi
+  '';
+
+  # Two-way merge (interactive, asks the master password once): NAS entries -> local, then upload.
+  kp-merge = pkgs.writeShellScriptBin "kp-merge" ''
+    ${kpCommon}
+    reachable || { echo "NAS not reachable: vpn-nas up" >&2; exit 1; }
+    fetch
+    if [ -s "$tmp/nas.kdbx" ] && [ "$(sha "$tmp/nas.kdbx")" != "$(sha "$db")" ]; then
+      cp "$db" "$db.bak-$(date +%F-%H%M%S)"
+      ${pkgs.keepassxc}/bin/keepassxc-cli merge --same-credentials "$db" "$tmp/nas.kdbx"
+    fi
+    upload; record; echo "merged and synced"
+  '';
   nas = pkgs.writeShellScriptBin "nas" ''
     # Mount the Freebox NAS (FTP) at ~/nas with rclone (FUSE, no sudo).
     #   nas mount | umount | status | log
@@ -79,19 +107,26 @@ let
 in
 {
   sops.secrets.nas_ftp_auth = { };
-  home.packages = [ nas kp-sync pkgs.rclone ];
+  home.packages = [ nas kp-sync kp-merge pkgs.rclone ];
 
-  # Back up the KeePassXC database to the NAS every 15 min (only if changed + reachable)
+  # Sync the KeePassXC database with the NAS (when reachable)
   systemd.user.services.kp-sync = {
-    Unit.Description = "Back up KeePassXC database to the NAS";
+    Unit.Description = "Two-way sync of the KeePassXC database with the NAS";
     Service = {
       Type = "oneshot";
       ExecStart = "${kp-sync}/bin/kp-sync";
     };
   };
+  # Local edits: sync as soon as KeePassXC saves the file (inotify; works on the WSL disk)
+  systemd.user.paths.kp-sync = {
+    Unit.Description = "Sync KeePassXC database when it changes";
+    Path.PathChanged = kpdb;
+    Install.WantedBy = [ "paths.target" ];
+  };
+  # NAS-side edits and retries after the VPN was down
   systemd.user.timers.kp-sync = {
-    Unit.Description = "Back up KeePassXC database to the NAS every 15 min";
-    Timer = { OnBootSec = "2min"; OnUnitActiveSec = "15min"; Persistent = true; };
+    Unit.Description = "Sync KeePassXC database with the NAS hourly";
+    Timer = { OnBootSec = "2min"; OnUnitActiveSec = "1h"; Persistent = true; };
     Install.WantedBy = [ "timers.target" ];
   };
 }
