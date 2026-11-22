@@ -34,10 +34,6 @@ let
       down)
         if isup; then sudo ${wg-quick} down ${dir}/${iface}.conf 2>&1 | grep -vE '^\[#\]' || true; sudo rm -f ${dir}/${iface}.conf; echo "disconnected"
         else echo "not connected"; fi
-        # old OpenVPN tunnel, if still running
-        if [ -f /run/vpn-nas.pid ] && [ -d "/proc/$(cat /run/vpn-nas.pid)" ]; then
-          sudo kill "$(cat /run/vpn-nas.pid)"; sudo rm -f /run/vpn-nas.pid; echo "stopped old OpenVPN tunnel"
-        fi
         ;;
       status)
         if isup; then echo "connected"; show; else echo "not connected"; fi

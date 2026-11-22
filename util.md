@@ -81,7 +81,7 @@
   - WorkSpaces
 - f.lux
 - cyberDuck - FTP
-- OVPN
+- WireGuard (VPN to the Freebox)
 
 ### PowerShell
 - posh-git

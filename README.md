@@ -37,7 +37,7 @@ so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman
    ```
    Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.
 4. **KeePassXC database** (personal machine): `vpn-nas up && kp-merge` pulls it from the NAS into `~/.local/share/keepassxc/`.
-5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; OpenVPN profiles and Freebox certificates: `windows/openvpn/README.md`.
+5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; WireGuard tunnels and Freebox certificates: `windows/wireguard/README.md`.
 6. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
 
 ### Day to day
@@ -57,10 +57,10 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 - Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
 ### Home network (VPN + NAS)
-- `vpn-nas up | down | status | log`: OpenVPN to the Freebox from WSL (profile + login in sops). Only `mafreebox.freebox.fr` goes through it.
+- `vpn-nas up | down | status`: WireGuard to the Freebox from WSL (config in sops). Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
 - KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly, needs `vpn-nas up`) syncs it with the NAS copy both ways when only one side changed; if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
-- Windows profiles (split tunnel / full tunnel): see `windows/openvpn/README.md`.
+- Windows tunnels (admin only / full): see `windows/wireguard/README.md`.
 
 ### Vim plugins
 Plugins are installed by Nix, so vim-plug is no longer used. To add one, put it in `home/vim.nix`:
