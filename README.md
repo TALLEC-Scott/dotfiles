@@ -49,6 +49,7 @@ API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` b
 ### Home network (VPN + NAS)
 - `vpn-nas up | down | status | log`: OpenVPN to the Freebox from WSL (profile + login in sops). Only `mafreebox.freebox.fr` goes through it.
 - `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
+- `kp-sync` (timer every 15 min, or `kpbackup` now): one-way backup of the KeePassXC database to the NAS when it changed and the NAS is reachable. Logs: `journalctl --user -u kp-sync`.
 - Windows profiles (split tunnel / full tunnel): see `windows/openvpn/README.md`.
 
 ### Vim plugins
