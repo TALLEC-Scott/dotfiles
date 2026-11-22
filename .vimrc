@@ -1,36 +1,8 @@
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-call plug#begin('~/.confs/vim/bundle/plugged')
-
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'vim-airline/vim-airline'
-Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
-"Plug 'scrooloose/syntastic'
-Plug 'frazrepo/vim-rainbow'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'Valloric/YouCompleteMe'
-
-call plug#end()
+" Plugins are installed by Nix (home/vim.nix); no plugin manager needed.
 
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 endif
-" Syntastic recommended settings
-"
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
-
-let g:syntastic_check_on_w = 1
 "coc,nvim setup
 "
 set hidden

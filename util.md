@@ -1,6 +1,10 @@
 # Util
 
-## CLI util (Debian-based Linux)
+## CLI util (any Linux, via Nix)
+
+> [!NOTE]
+> The source of truth for installed CLI tools is now [`home/packages.nix`](home/packages.nix), applied with `home-manager switch`.
+> The sections below keep the original grouping (apt, cargo, ...) for reference; `bpytop` is replaced by `btop`.
 
 
 ### sh
@@ -30,7 +34,7 @@
 
 
 ### Deb
-- neofetch
+- fastfetch
 - lscpu
 - htop
 - lazy git
@@ -59,7 +63,7 @@
 - ripgrep (rg is like grep, but in rust and more intuitive (also in Debian)
 ### From source
 - [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
-- lolcat for noefetch gradiant
+- lolcat (rainbow output)
 
 ### Go
 - OSV scanner 

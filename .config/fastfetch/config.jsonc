@@ -1,0 +1,61 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "display": {
+    "separator": "  ",
+    "key": { "width": 6 },
+    "percent": { "type": 11, "green": 50, "yellow": 80 },
+    "bar": {
+      "width": 12,
+      "char": { "elapsed": "█", "total": "░" },
+      "border": { "left": "", "right": "" }
+    }
+  },
+  "modules": [
+    "title",
+    "break",
+
+    // Software
+    { "type": "custom", "format": "\u001b[1;34m╭─ Software\u001b[0m" },
+    { "type": "os",       "key": "│ \uf31b", "keyColor": "blue" },
+    { "type": "kernel",   "key": "│ \uf17c", "keyColor": "blue" },
+    { "type": "packages", "key": "│ \uf487", "keyColor": "blue" },
+    { "type": "shell",    "key": "│ \uf120", "keyColor": "blue" },
+    { "type": "terminal", "key": "│ \uf489", "keyColor": "blue" },
+    { "type": "uptime",   "key": "│ \uf017", "keyColor": "blue" },
+    { "type": "custom", "format": "\u001b[1;34m╰─\u001b[0m" },
+
+    // Hardware
+    { "type": "custom", "format": "\u001b[1;32m╭─ Hardware\u001b[0m" },
+    { "type": "host",    "key": "│ \uf108", "keyColor": "green" },
+    { "type": "cpu",     "key": "│ \uf2db", "keyColor": "green" },
+    { "type": "gpu",     "key": "│ \uf1b2", "keyColor": "green" },
+    { "type": "display", "key": "│ \uf26c", "keyColor": "green" },
+    { "type": "memory",  "key": "│ \uf0e4", "keyColor": "green" },
+    { "type": "swap",    "key": "│ \uf021", "keyColor": "green" },
+    {
+      "type": "disk",
+      "key": "│ \uf0a0",
+      "keyColor": "green",
+      "folders": "/:/mnt/c:/mnt/d",
+      "format": "{size-percentage-bar} {size-percentage}  {mountpoint}  {size-used} / {size-total}"
+    },
+    { "type": "custom", "format": "\u001b[1;32m╰─\u001b[0m" },
+
+    // Now
+    { "type": "custom", "format": "\u001b[1;35m╭─ Now · Vélizy-Villacoublay\u001b[0m" },
+    {
+      "type": "weather",
+      "key": "│ \ue30d",
+      "keyColor": "magenta",
+      "location": "Velizy-Villacoublay",
+      "outputFormat": "%c%t+(feels+%f)+·+%C+·+%w+·+%h",
+      "timeout": 1500
+    },
+    { "type": "custom", "format": "\u001b[1;35m╰─\u001b[0m" },
+
+    "break",
+    { "type": "custom", "format": "\u001b[3m\"Move fast, break things.\"\u001b[0m" },
+    "break",
+    { "type": "colors", "symbol": "circle" }
+  ]
+}
