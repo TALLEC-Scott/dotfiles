@@ -31,6 +31,7 @@ in
 
     # AI
     ollama
+    qwen-code          # `qwen`
   ];
 
   home.activation.uvTools = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
