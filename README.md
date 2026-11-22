@@ -35,7 +35,16 @@ Existing `~/.bashrc`, `~/.vimrc`, ... are moved to `*.backup` on the first switc
 - Add a tool: add it to `home/packages.nix` (search with `nix search nixpkgs <name>`), then `hms`
 - Update everything: `update` (`nix flake update` + switch + `uv tool upgrade --all`)
 - Roll back: `home-manager generations`, then run the `activate` script of an older generation
-- Machine-local settings / secrets go in `~/.bashrc.local` (not tracked)
+- Machine-local settings go in `~/.bashrc.local` (not tracked)
+
+### Secrets (sops-nix)
+API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` by
+[sops-nix](https://github.com/Mic92/sops-nix), then exported as env vars (`home/secrets.nix`).
+
+- Edit / add a key: `sops secrets/secrets.yaml`, add the name to `envSecrets` in `home/secrets.nix`, then `hms`
+- The age private key is `~/.config/sops/age/keys.txt`. **Back it up in KeePassXC.** Without it, the secrets cannot be decrypted.
+- New machine: copy the age key to that path (`chmod 600`) before running `bootstrap.sh`
+- Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
 
 ### Vim plugins
 Plugins are installed by Nix, so vim-plug is no longer used. To add one, put it in `home/vim.nix`:

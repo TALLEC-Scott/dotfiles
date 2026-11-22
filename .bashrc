@@ -50,8 +50,7 @@ if [ -d /usr/local/cuda ]; then
     export LDFLAGS="-L/usr/local/cuda/lib64"
 fi
 
-# API keys and other secrets (chmod 600, not tracked)
-[ -f ~/.bash_secrets ] && . ~/.bash_secrets
+# API keys: exported from sops-nix secrets (home/secrets.nix)
 
 # User PATH entries
 export PATH="$HOME/.local/bin:$PATH:$HOME/go/bin"

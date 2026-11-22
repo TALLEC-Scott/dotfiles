@@ -7,9 +7,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { nixpkgs, home-manager, ... }:
+  outputs = { nixpkgs, home-manager, sops-nix, ... }:
     let
       # One entry per machine/user. Add more (e.g. the Raspberry Pi) as needed.
       hosts = {
@@ -23,7 +27,7 @@
           config.allowUnfree = true;
         };
         extraSpecialArgs = { inherit (h) username homeDirectory; };
-        modules = [ ./home ];
+        modules = [ sops-nix.homeManagerModules.sops ./home ];
       };
     in
     {

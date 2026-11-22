@@ -33,6 +33,11 @@ in
     ripgrep
     jq
     fzf
+
+    # secrets
+    sops
+    age
+    keepassxc         # keepassxc-cli
     tmux
     lolcat
     cowsay

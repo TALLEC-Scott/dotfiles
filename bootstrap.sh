@@ -18,6 +18,12 @@ if ! grep -qs 'flakes' "$HOME/.config/nix/nix.conf"; then
   echo "experimental-features = nix-command flakes" >> "$HOME/.config/nix/nix.conf"
 fi
 
+AGE_KEY="$HOME/.config/sops/age/keys.txt"
+if [ ! -f "$AGE_KEY" ]; then
+  echo "!! No age key at $AGE_KEY: secrets (API keys) will not be decrypted."
+  echo "   Copy it from KeePassXC (entry 'sops age key'), then: chmod 600 $AGE_KEY && hms"
+fi
+
 echo ">> Activating Home Manager config '$HOST' from $REPO"
 # -b backup: existing ~/.bashrc, ~/.vimrc, ... are renamed to *.backup instead of failing
 nix run home-manager/master -- switch -b backup --flake "$REPO#$HOST"

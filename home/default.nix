@@ -5,6 +5,7 @@
     ./bash.nix
     ./vim.nix
     ./files.nix
+    ./secrets.nix
   ];
 
   home = {
