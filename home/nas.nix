@@ -22,7 +22,12 @@ let
         RCLONE_CONFIG_NAS_USER=$(sed -n 1p "${auth}"); export RCLONE_CONFIG_NAS_USER
         RCLONE_CONFIG_NAS_PASS=$(sed -n 2p "${auth}" | $rclone obscure -); export RCLONE_CONFIG_NAS_PASS
         mkdir -p "$mnt" "$(dirname "$log")"
+        # Freebox FTP allows few connections per user: cap them, reuse idle ones,
+        # and cache listings so `ls` doesn't reopen connections every time.
         $rclone mount nas: "$mnt" --daemon --vfs-cache-mode writes \
+          --ftp-concurrency 3 --checkers 2 --transfers 2 \
+          --ftp-idle-timeout 5m --dir-cache-time 1h --attr-timeout 1m \
+          --low-level-retries 3 \
           --log-file "$log" --log-level INFO
         for _ in $(seq 1 10); do mountpoint -q "$mnt" && break; sleep 1; done
         if mountpoint -q "$mnt" && ls "$mnt" >/dev/null 2>&1; then echo "mounted at $mnt"
