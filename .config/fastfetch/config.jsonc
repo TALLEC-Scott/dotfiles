@@ -41,18 +41,6 @@
     },
     { "type": "custom", "format": "\u001b[1;32m╰─\u001b[0m" },
 
-    // Now
-    { "type": "custom", "format": "\u001b[1;35m╭─ Now · Vélizy-Villacoublay\u001b[0m" },
-    {
-      "type": "weather",
-      "key": "│ \ue30d",
-      "keyColor": "magenta",
-      "location": "Velizy-Villacoublay",
-      "outputFormat": "%c%t+(feels+%f)+·+%C+·+%w+·+%h",
-      "timeout": 1500
-    },
-    { "type": "custom", "format": "\u001b[1;35m╰─\u001b[0m" },
-
     "break",
     { "type": "custom", "format": "\u001b[3m\"Move fast, break things.\"\u001b[0m" },
     "break",
