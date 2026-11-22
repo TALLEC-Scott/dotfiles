@@ -6,6 +6,7 @@
     ./vim.nix
     ./files.nix
     ./secrets.nix
+    ./vpn.nix
   ];
 
   home = {
