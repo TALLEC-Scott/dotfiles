@@ -38,8 +38,9 @@ so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman
    Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.
 4. **KeePassXC database** (personal machine): `vpn-nas up && kp-merge` pulls it from the NAS into `~/.local/share/keepassxc/`.
 5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; WireGuard tunnels and Freebox certificates: `windows/wireguard/README.md`.
-6. **Always on (WSL):** `hms` enables linger (user services such as `vpn-nas` start with WSL; on distros that refuse it without root, run `sudo loginctl enable-linger $USER`), and a Windows Startup shortcut keeps WSL running from logon:
+6. **Always on (WSL):** a Windows Startup shortcut keeps WSL running from logon (its session starts the user services):
    target `C:\Windows\System32\conhost.exe`, arguments `--headless C:\Windows\System32\wsl.exe -d Ubuntu --exec sleep infinity`.
+   On a **server** you SSH into, also run `loginctl enable-linger $USER` (sudo on stricter distros) so services keep running after logout.
 7. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
 
 ### Day to day

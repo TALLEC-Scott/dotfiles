@@ -1,4 +1,4 @@
-{ pkgs, lib, username, homeDirectory, ... }:
+{ pkgs, username, homeDirectory, ... }:
 {
   imports = [
     ./packages.nix
@@ -35,16 +35,6 @@
     timestamp = "-30 days";
     store.cleanup = true;
   };
-
-  # Linger: start user services (vpn-nas, kp-sync, sops-nix) at boot, not at first login.
-  # Allowed without sudo where polkit permits it (Ubuntu default); otherwise just a hint.
-  home.activation.linger = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    if command -v loginctl >/dev/null \
-       && [ "$(loginctl show-user "$USER" -p Linger --value 2>/dev/null)" = no ]; then
-      run loginctl enable-linger "$USER" 2>/dev/null \
-        || echo "note: enable linger once with: sudo loginctl enable-linger $USER" >&2
-    fi
-  '';
 
   programs.git = {
     enable = true;
