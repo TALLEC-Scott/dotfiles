@@ -1,16 +1,19 @@
-# Windows OpenVPN: Freebox admin only (split tunnel)
+# Windows OpenVPN profiles
 
-`freebox-admin-routes.ovpn` holds only the routing lines. The full profile also
+- `freebox-admin`: only mafreebox.freebox.fr through the VPN (split tunnel)
+- `freebox-full`: all traffic through the Freebox (e.g. Netflix); connect only when needed
+
+`*-routes.ovpn` hold only the routing lines. The full profile also
 contains the client private key, so it is **not** in git (it is in sops as
 `openvpn_nas`).
 
-Create the Windows profile:
+Create a Windows profile (NAME = freebox-admin or freebox-full):
 
 ```bash
-mkdir -p "/mnt/c/Users/$WINUSER/OpenVPN/config/freebox-admin"
+mkdir -p "/mnt/c/Users/$WINUSER/OpenVPN/config/$NAME"
 { sops decrypt --extract '["openvpn_nas"]' secrets/secrets.yaml
-  echo; cat windows/openvpn/freebox-admin-routes.ovpn; } | sed 's/$/\r/' \
-  > "/mnt/c/Users/$WINUSER/OpenVPN/config/freebox-admin/freebox-admin.ovpn"
+  echo; cat windows/openvpn/$NAME-routes.ovpn; } | sed 's/$/\r/' \
+  > "/mnt/c/Users/$WINUSER/OpenVPN/config/$NAME/$NAME.ovpn"
 ```
 
 Freebox HTTPS certificates: the box uses Free's private CA. Install
