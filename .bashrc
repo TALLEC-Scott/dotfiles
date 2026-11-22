@@ -52,6 +52,13 @@ fi
 
 # API keys: exported from sops-nix secrets (home/secrets.nix)
 
+# KeePassXC database (on WSL, ~/Passwords.kdbx links to the Windows copy)
+export KPDB="${KPDB:-$HOME/Passwords.kdbx}"
+# kp <search> [timeout]       copy password (cleared after timeout, default 10 s)
+# kp <search> -a username     copy another field;  kp <search> -t   copy TOTP code
+kp() { keepassxc-cli clip -b "$KPDB" "$@"; }
+kps() { keepassxc-cli search "$KPDB" "$@"; }   # list matching entries
+
 # User PATH entries
 export PATH="$HOME/.local/bin:$PATH:$HOME/go/bin"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
