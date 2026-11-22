@@ -2,94 +2,85 @@
 
 
 This repository contains configuration files for a personalized development environment.
+Everything is managed with [Nix](https://nixos.org) and [Home Manager](https://github.com/nix-community/home-manager), so it works on any Linux distro or WSL (no macOS).
 
-## **How it works**
+## **Included Files**
 
-Everything is managed by [Nix](https://nixos.org) + [Home Manager](https://github.com/nix-community/home-manager),
-so the same setup works on any Linux distro and WSL, with no `apt`/`dnf`/`pacman` involved. Linux only (no macOS).
+- `flake.nix`: the profiles
+- `home/base/`: bash, vim, git, fastfetch and everyday CLI tools (every profile)
+- `home/dev.nix`: compilers and dev tools
+- `home/personal/`: secrets, home VPN, NAS and KeePassXC sync
+- `.bashrc`, `.bash_aliases`, `.vimrc`: my shell and vim config, still usable without Nix
+- `bootstrap.sh`: setup script for a new machine
 
-| Path | What |
-| --- | --- |
-| `flake.nix` | Entry point: the **profiles** (`scott`, `work`, `server`, `minimal`, `server-arm`) |
-| `home/base/` | Every profile: bash, vim, git, fastfetch, `xdg-open`, everyday CLI tools, Home Manager settings |
-| `home/dev.nix` | Toolchains and dev tools (gcc, clang-tools, go, Java, Python tools, ollama…) |
-| `home/personal/` | Secrets (sops), home VPN (`vpn-nas`), NAS (`nas`), KeePassXC sync. Needs the age key |
-| `.bashrc` / `.bash_aliases` / `.vimrc` | Your aliases, functions and vim settings: plain files, still usable without Nix |
-| `bootstrap.sh` | One-shot setup on a new machine |
+### **Profiles**
 
-**Profiles:** `scott` = base + dev + personal (this PC) · `work` = base + dev (company machine: no personal secrets) · `server` = base + personal · `minimal` = base. Apply one with `home-manager switch --flake ~/home/dotfiles#<profile>`.
+- `scott`: base + dev + personal (my PC)
+- `work`: base + dev (company machine, no personal secrets)
+- `server`: base + personal
+- `minimal`: base only
 
 ---
 
 ## **Getting Started**
 
-### New machine (new job, new PC, fresh WSL)
-1. **Profile.** Pick one (see above). If the username or CPU differs, add an entry in `flake.nix`, e.g.
-   `work-jdoe = mkHome { modules = profiles.work; username = "jdoe"; };`
-2. **Age key** (decrypts `secrets/secrets.yaml`: API keys, VPN, NAS login).
-   - Personal machine: copy it from KeePassXC (entry `sops age key`) to `~/.config/sops/age/keys.txt`, `chmod 600`.
-   - Company machine: use the `work` profile, which has no secrets at all.
-   - The database is on the NAS, which needs the VPN, which needs the age key. **Keep an offline copy of `Passwords.kdbx`** (USB or phone).
-3. **Install:**
-   ```bash
-   git clone https://github.com/TALLEC-Scott/dotfiles.git ~/home/dotfiles
-   cd ~/home/dotfiles && ./bootstrap.sh <profile>   # scott (default), work, server, minimal
-   exec bash
-   ```
-   Existing `~/.bashrc`, `~/.vimrc`, ... become `*.backup`.
-4. **KeePassXC database** (personal machine): `vpn-nas up && kp-merge` pulls it from the NAS into `~/.local/share/keepassxc/`.
-5. **Windows (WSL only):** install the JetBrainsMono Nerd Font on Windows; WireGuard tunnels and Freebox certificates: `windows/wireguard/README.md`.
-6. **Always on (WSL):** a Windows Startup shortcut keeps WSL running from logon (its session starts the user services):
-   target `C:\Windows\System32\conhost.exe`, arguments `--headless C:\Windows\System32\wsl.exe -d Ubuntu --exec sleep infinity`.
-   On a **server** you SSH into, also run `loginctl enable-linger $USER` (sudo on stricter distros) so services keep running after logout.
-7. **Check:** `which bat eza rg` → `~/.nix-profile/bin`; `vpn-nas up && nas mount` (personal machine).
+### **1. Clone and install**
+```bash
+git clone https://github.com/TALLEC-Scott/dotfiles.git ~/home/dotfiles
+cd ~/home/dotfiles && ./bootstrap.sh <profile>   # default: scott
+exec bash
+```
+`bootstrap.sh` installs Nix if needed and applies the profile. Existing `~/.bashrc`, `~/.vimrc`, ... are renamed to `*.backup`.
 
-### Day to day
-- Edit a file in the repo, then apply it: `hms` (alias for `home-manager switch --flake ~/home/dotfiles`)
-- Add a tool: add it to `home/packages.nix` (search with `nix search nixpkgs <name>`), then `hms`
-- Update everything: `update` (`nix flake update` + switch + `uv tool upgrade --all`)
-- Roll back: `home-manager generations`, then run the `activate` script of an older generation
-- Machine-local settings go in `~/.bashrc.local` (not tracked)
+If the username or CPU is different, add an entry in `flake.nix` first:
+```nix
+work-jdoe = mkHome { modules = profiles.work; username = "jdoe"; };
+```
 
-### Secrets (sops-nix)
-API keys are stored encrypted in `secrets/secrets.yaml` and decrypted on `hms` by
-[sops-nix](https://github.com/Mic92/sops-nix), then exported as env vars (`home/secrets.nix`).
+### **2. Secrets (personal profiles only)**
+Secrets are encrypted in `secrets/secrets.yaml` with [sops-nix](https://github.com/Mic92/sops-nix). To decrypt them, copy the age key from KeePassXC (entry `sops age key`) to `~/.config/sops/age/keys.txt` and `chmod 600` it, then run `hms`.
 
-- Edit / add a key: `sops secrets/secrets.yaml`, add the name to `envSecrets` in `home/secrets.nix`, then `hms`
-- The age private key is `~/.config/sops/age/keys.txt`. **Back it up in KeePassXC.** Without it, the secrets cannot be decrypted.
-- New machine: copy the age key to that path (`chmod 600`) before running `bootstrap.sh`
-- Another machine/person: add its age public key to `.sops.yaml`, then `sops updatekeys secrets/secrets.yaml`
+Keep an offline copy of `Passwords.kdbx` (USB or phone): the age key is inside it, and the NAS copy needs the VPN, which needs the age key.
 
-### Home network (VPN + NAS)
-- `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (wireproxy as a systemd user service: starts with WSL, restarts if it dies; config in sops; no sudo). Nothing is routed system-wide: only programs using the SOCKS5 proxy `127.0.0.1:41080` go out through home (`nas`, `kp-sync`, and Firefox for Netflix).
-- Netflix + Freebox admin (mafreebox.freebox.fr) in Firefox (Windows): copy `windows/home.pac` to `C:\Users\<you>\home.pac`; Firefox → Settings → Network Settings → *Automatic proxy configuration URL* `file:///C:/Users/<you>/home.pac` + tick *Proxy DNS when using SOCKS v5*. Needs `vpn-nas up`. Only `mafreebox.freebox.fr` goes through it.
-- `nas mount | umount | status | log`: mount the Freebox NAS (FTP, rclone/FUSE, no sudo) at `~/nas`. Needs `vpn-nas up`.
-- KeePassXC database: `~/.local/share/keepassxc/Passwords.kdbx` (in WSL). `kp-sync` (runs on every save and hourly) syncs it with the NAS copy both ways when only one side changed (starts the VPN itself); if both changed it stops and you run `kp-merge` (KeePassXC entry merge, asks the master password). Logs: `journalctl --user -u kp-sync`.
-- Windows tunnels (admin only / full): see `windows/wireguard/README.md`.
-
-### Vim plugins
-Plugins are installed by Nix, so vim-plug is no longer used. To add one, put it in `home/vim.nix`:
-a `pkgs.vimPlugins.<name>` entry, or a `fromGitHub { ... }` entry if it is not in nixpkgs.
-
-### Notes
-- **WSL GPU tools**: `/usr/lib/wsl/lib` is added to `LD_LIBRARY_PATH` so nvitop, gpustat and btop see the NVIDIA driver.
-  On a native distro with an NVIDIA GPU, use [nixGL](https://github.com/nix-community/nixGL) or the distro's driver libs.
-- **Font**: JetBrainsMono Nerd Font is installed by Nix, but on WSL the terminal is a Windows app, so install the font on Windows too.
+### **3. WSL only**
+- Install the JetBrainsMono Nerd Font on Windows (the terminal runs on Windows).
+- Startup shortcut to keep WSL running from logon: `conhost.exe --headless wsl.exe -d Ubuntu --exec sleep infinity`
+- WireGuard tunnels and Freebox certificates: see `windows/wireguard/README.md`
 
 ---
 
-*Prompt*: oh-my-posh, Atomic theme (configured in `home/bash.nix`). *Font*: JetBrainsMono NFM.
+## **Usage**
+
+- `hms`: apply the config after editing it (`home-manager switch --flake ~/home/dotfiles`)
+- `update`: update all packages (`nix flake update` + `hms` + `uv tool upgrade --all`), then commit `flake.lock`
+- Add a package: `home/base/packages.nix` or `home/dev.nix` (search with `nix search nixpkgs <name>`)
+- Edit a secret: `sops secrets/secrets.yaml`
+- Roll back: `home-manager generations`, then run `activate` from an older one
+- Old generations are deleted after 30 days
+
+### **Home network**
+- `vpn-nas up | down | status`: WireGuard to the Freebox, rootless (no sudo). Nothing is routed system-wide, only programs using the SOCKS5 proxy `127.0.0.1:41080` go through home.
+- `nas mount | umount`: mounts the Freebox NAS at `~/nas`
+- `kp-sync`: syncs the KeePassXC database with the NAS on every save. If both copies changed, run `kp-merge`.
+- Firefox: `windows/home.pac` sends Netflix and `mafreebox.freebox.fr` through the VPN. Set it in Network Settings → *Automatic proxy configuration URL* (`file:///C:/Users/<you>/home.pac`) and tick *Proxy DNS when using SOCKS v5*.
+
+### **Notes**
+- Vim plugins are installed by Nix (no more vim-plug). Add them in `home/base/vim.nix`.
+- GPU tools (nvitop, gpustat, btop) use the Windows NVIDIA driver through `/usr/lib/wsl/lib`.
+- Machine-local settings go in `~/.bashrc.local` (not tracked).
+
+*Prompt*: oh-my-posh, Atomic theme. *Font*: JetBrainsMono NFM.
 
 ## **TODO**
 
-- ~~Add os conditionals depending on if on wsl or linux~~ / ~~use nix for an os agnostic config~~ (done: Home Manager flake)
+- ~~Add os conditionals depending on if on wsl or linux~~ / ~~use nix for an os agnostic config~~ (done)
 - Think about the git config or ways that we could sync configs accross environments
 - add ide specific configs and plugins
 - add style rules and lint rules that fit my taste
 - add tool or skills config for agentic coding
 - add outlook and workflow scripts
 - add windows powertoys config
-- ~~include all util installation in a single script~~ (done: `bootstrap.sh` + `home/packages.nix`)
+- ~~include all util installation in a single script~~ (done: `bootstrap.sh`)
 ---
 
 ## **Credits**

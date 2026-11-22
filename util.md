@@ -3,8 +3,7 @@
 ## CLI util (any Linux, via Nix)
 
 > [!NOTE]
-> The source of truth for installed CLI tools is now [`home/packages.nix`](home/packages.nix), applied with `home-manager switch`.
-> The sections below keep the original grouping (apt, cargo, ...) for reference; `bpytop` is replaced by `btop`.
+> Installed tools now live in `home/base/packages.nix` and `home/dev.nix`. The list below is kept for reference.
 
 
 ### sh
