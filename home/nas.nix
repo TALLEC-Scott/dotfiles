@@ -5,7 +5,7 @@ let
   host = "mafreebox.freebox.fr"; # routed through the tunnel by vpn-nas
   # Top folder on the NAS (the Freebox partition name)
   nasRoot = "NAS Freebox";
-  kpDir = "${nasRoot}/0-documents-importants/KeePassXC";
+  kpDir = "${nasRoot}/0-documents-importants/kee-pass-xc";
 
   # rclone remote "nas:" from env (login from sops, never on the command line)
   rcloneEnv = ''
