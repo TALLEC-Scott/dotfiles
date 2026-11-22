@@ -61,7 +61,7 @@
 - [eza](https://eza.rocks/) (a modern replacement for ls) (also avaliable in Debian)
 - ripgrep (rg is like grep, but in rust and more intuitive (also in Debian)
 ### From source
-- [btop++](https://github.com/aristocratos/btop) (with gpu enabled)
+- ~~[btop++](https://github.com/aristocratos/btop) (with gpu enabled)~~ now from Nix, GPU support built in
 - lolcat (rainbow output)
 
 ### Go

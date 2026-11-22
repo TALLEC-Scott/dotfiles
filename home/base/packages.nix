@@ -5,7 +5,7 @@
     # system / monitoring
     fastfetch
     htop
-    btop               # use btop-cuda instead on a machine with an NVIDIA GPU
+    btop               # GPU support built in (loads NVIDIA NVML at run time)
     bottom             # btm
     glances
     nvitop
